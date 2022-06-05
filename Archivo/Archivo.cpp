@@ -4,6 +4,9 @@
 #include <fstream>
 #include <cstdio>
 
+//importaciones
+#include "../Analizador/Analizador.h"
+
 using namespace std;
 
 void leerArchivo(char path[]){
@@ -27,7 +30,7 @@ void leerArchivo(char path[]){
                 memset(lineacomando,0,200);
             }else{
                 if (lineacomando[0]!=NULL){
-                    cout << "Read: "<<lineacomando<<endl;
+                    analizadorGeneral(lineacomando);
                     memset(lineacomando,0,200);
                 }
             }

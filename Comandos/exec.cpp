@@ -35,34 +35,36 @@ void analisisExec(char comando[]){
             memset(lineacomando,0,100);
             contador++;
         }else if (strcmp(lineacomando,"$path=>")==0){
-            cout << "Encontro: "<<lineacomando<<endl;
+            cout << "Argumento: "<<lineacomando<<endl;
             memset(lineacomando,0,100);
             //para obtener el valor del argumento
             while(comando[contador]!=NULL){
-                if (comando[contador]=='"'){
+                if(comando[contador]=='"'){//cuando viene con comillas el path
                     contador++;
                     while(comando[contador]!=NULL){
-                        if (comando[contador]!=NULL){
+                        if(comando[contador]=='"'){
                             contador++;
                             break;
                         }else{
                             char aux[1]="";
-                            aux[0]=comando[contador];
+                            aux[0]= comando[contador];
                             strncat(valor_path,aux,1);
                             contador++;
                         }
                     }
                 }else{
-                    if (comando[contador]==' ' || comando[contador]=='\n'){
+                    if(comando[contador]==' ' || comando[contador]=='\n'){
                         contador++;
                         break;
+
                     }else{
                         char aux[1]="";
-                        aux[0] = comando[contador];
+                        aux[0]= comando[contador];
                         strncat(valor_path,aux,1);
                         contador++;
                     }
                 }
+
             }
             cout << "Valor: "<<valor_path<<endl;
         }

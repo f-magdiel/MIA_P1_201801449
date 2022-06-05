@@ -7,6 +7,7 @@ using namespace std;
 
 //importaciones
 #include "../Comandos/exec.h"
+#include "../Comandos/mkdisk.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -32,7 +33,8 @@ void analizadorGeneral(char comando[]){
             analisisExec(comando);
             memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"mkdisk")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analisisMkdisk(comando);
+            memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"rmdisk")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"fdisk")==0){
