@@ -6,7 +6,7 @@
 typedef struct PARTICION{
     char part_status;
     char part_type;
-    char part_fit[2];
+    char part_fit[3];
     int part_start;
     int part_size;
     char part_name[16];
@@ -16,11 +16,7 @@ typedef struct MBR{
     int mbr_tamano;
     time_t  mbr_fecha_creacion;
     int mbr_disk_signature;
-    PARTICION mbr_particion_1;
-    PARTICION mbr_particion_2;
-    PARTICION mbr_particion_3;
-    PARTICION mbr_particion_4;
-
+    PARTICION mbr_particion[4];
 }MBR;
 
 

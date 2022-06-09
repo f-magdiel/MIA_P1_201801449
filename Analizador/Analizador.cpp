@@ -9,6 +9,7 @@ using namespace std;
 #include "../Comandos/exec.h"
 #include "../Comandos/mkdisk.h"
 #include "../Comandos/rmdisk.h"
+#include "../Comandos/fdisk.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -40,7 +41,8 @@ void analizadorGeneral(char comando[]){
             analisisRmdisk(comando);
             memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"fdisk")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analsisFdisk(comando);
+            memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"mount")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"unmount")==0){

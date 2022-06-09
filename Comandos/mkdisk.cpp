@@ -34,7 +34,6 @@ bool validacionName(char name[]){
     for (int i = 0; i < 20; ++i) {
         if(name[i]!=NULL){
             if (!isalnum(name[i]) && name[i]!='.' && name[i]!='_'){
-
                 return false;
             }
             if(name[i]=='.'){
@@ -105,31 +104,22 @@ void crearDiscos(char path[],char name[],char size[]){
     mbr->mbr_fecha_creacion = tiempoactual;//se asigna el timepo de creacion
 
     //se inicializa las particiones
-    mbr->mbr_particion_1.part_status = '0';
-    mbr->mbr_particion_1.part_type = '-';
-    mbr->mbr_particion_1.part_start = 0;
-    mbr->mbr_particion_1.part_size = 0;
-
-    mbr->mbr_particion_2.part_status = '0';
-    mbr->mbr_particion_2.part_type = '-';
-    mbr->mbr_particion_2.part_start = 0;
-    mbr->mbr_particion_2.part_size = 0;
-
-    mbr->mbr_particion_3.part_status = '0';
-    mbr->mbr_particion_3.part_type = '-';
-    mbr->mbr_particion_3.part_start = 0;
-    mbr->mbr_particion_3.part_size = 0;
-
-    mbr->mbr_particion_4.part_status = '0';
-    mbr->mbr_particion_4.part_type = '-';
-    mbr->mbr_particion_4.part_start = 0;
-    mbr->mbr_particion_4.part_size = 0;
+    for (int i = 0; i < 4; ++i) {
+        mbr->mbr_particion[i].part_status = '0';
+        mbr->mbr_particion[i].part_type = '-';
+        mbr->mbr_particion[i].part_start = 0;
+        mbr->mbr_particion[i].part_size = 0;
+    }
 
     //se escribe el disco
     FILE *file; //se crea el file para escribir en ello
     file = fopen(path_disco.c_str(),"w+b");// en modo escribir binario
     fseek(file,size_bytes,SEEK_SET);//se posicion donde termina el mbr
     fwrite("0",1,1,file);//se escribe el disco
+    //fseek(file,0,SEEK_SET);
+    //for (int i = 0; i < size_bytes; ++i) {
+    //    fwrite("0",1,1,file);
+    //}
     fseek(file,0,SEEK_SET);//se posiciona al principio del disco
     fwrite(mbr,sizeof (MBR),1,file);// se escribe el mbr
 
