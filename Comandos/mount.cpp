@@ -175,6 +175,7 @@ void montajeMount(char _path[],char _name[]){
             break;
         }
     }
+
     if(existe_particion){//si existe nombre particion
         if(existe_disk){//ya se ha ingresado una particion del mismo disco
             //mbr->mbr_particion[cont_Part].part_type=='p'
