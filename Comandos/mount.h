@@ -10,6 +10,7 @@ void montajeMount(char[],char[]);
 void agregarParticionMount(char _path[],char _name[],int size,char _type, char _fit[],int _start,int _next);
 void elimininarParticionMount(char _path[],char _name[]);
 void showMount();
+void desmontarMount(char []);
 
 
 

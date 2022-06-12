@@ -15,6 +15,53 @@ char abdecedario[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o
 int contador_abc=0;
 int contador_disco=0;
 
+//para desmontar
+void desmontarMount(char _id[]){
+    bool flag_unmount=false;
+    for (int i = 0; i < 99; ++i) {
+        if(disco[i].mbr_tamano!=0){//si existo disco
+            for (int j = 0; j < 4; ++j) {
+                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// si está en las 4 basica
+                    //se desmonta
+                    disco[i].mbr_particion[j].part_type = '\000';
+                    disco[i].mbr_particion[j].part_size = 0;
+                    disco[i].mbr_particion[j].part_start = 0;
+                    memset(disco[i].mbr_particion[j].part_fit,0,3);
+                    memset(disco[i].mbr_particion[j].part_name,0,16);
+                    memset(disco[i].mbr_particion[j].id,0,10);
+                    cout << "Aviso -> Se ha desmontado particion con id "<<_id<<endl;
+                    flag_unmount=true;
+                    break;
+                }
+
+                if(disco[i].mbr_particion[j].part_type=='e'){//si es extendida y nombre no es igual se busca en logicas
+                    for (int k = 0; k < 24; ++k) {
+                        if(strcmp(disco[i].ebr_logicas[k].id,_id)==0){
+                            //se desmonta
+                            disco[i].ebr_logicas[k].part_size  = 0;
+                            disco[i].ebr_logicas[k].part_next = 0;
+                            disco[i].ebr_logicas[k].part_start = 0;
+                            memset(disco[i].ebr_logicas[k].part_fit,0,3);
+                            memset(disco[i].ebr_logicas[k].part_name,0,16);
+                            memset(disco[i].ebr_logicas[k].id,0,10);
+                            cout << "Aviso -> Se ha desmontado particion con id "<<_id<<endl;
+                            flag_unmount=true;
+                            break;
+
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    //para validar error
+    if(flag_unmount==false){
+        cout << "Error -> No se ha encontrado particion con id "<<_id<<endl;
+    }
+}
+
 //para eliminar
 void elimininarParticionMount(char _path[],char _name[]){
     //busco en disco
@@ -29,6 +76,7 @@ void elimininarParticionMount(char _path[],char _name[]){
                     memset(disco[i].mbr_particion[j].part_fit,0,3);
                     memset(disco[i].mbr_particion[j].part_name,0,16);
                     memset(disco[i].mbr_particion[j].id,0,10);
+                    break;
                 }
                 //busco en extendida
                 if(disco[i].mbr_particion[j].part_type=='e'){
@@ -185,8 +233,8 @@ void montajeMount(char _path[],char _name[]){
                     if(strcmp(disco[cont_disk].mbr_particion[i].part_name,_name)==0){
                         //solo se le genera el id
                         char letra = disco[cont_disk].letra;
-                        id_generado[0]='V';
-                        id_generado[1]='D';
+                        id_generado[0]='v';
+                        id_generado[1]='d';
                         id_generado[2]=letra;
                         //into to string
                         disco[cont_disk].numeral++;
@@ -232,8 +280,8 @@ void montajeMount(char _path[],char _name[]){
                 strcpy(disco[cont_disk].mbr_particion[cont_Part].part_name,mbr->mbr_particion[cont_Part].part_name);
                 strcpy(disco[cont_disk].mbr_particion[cont_Part].part_fit,mbr->mbr_particion[cont_Part].part_fit);
                 //generando id
-                id_generado[0]='V';
-                id_generado[1]='D';
+                id_generado[0]='v';
+                id_generado[1]='d';
                 id_generado[2]=letra;
                 //into to string
                 disco[cont_disk].numeral++;
@@ -278,8 +326,8 @@ void montajeMount(char _path[],char _name[]){
                         for (int j = 0; j < 24; ++j) {
                             if(strcmp(disco[cont_disk].ebr_logicas[j].part_name,_name)==0){
                                 //generar id
-                                id_generado[0]='V';
-                                id_generado[1]='D';
+                                id_generado[0]='v';
+                                id_generado[1]='d';
                                 id_generado[2]=letra;
                                 //into to string
                                 disco[cont_disk].numeral++;
@@ -344,8 +392,8 @@ void montajeMount(char _path[],char _name[]){
                            strcpy(disco[contador_disco].mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
                            strcpy(disco[contador_disco].mbr_particion[i].part_name,mbr->mbr_particion[i].part_name);
                            //generando id
-                           id_generado[0]='V';
-                           id_generado[1]='D';
+                           id_generado[0]='v';
+                           id_generado[1]='d';
                            id_generado[2]=abdecedario[contador_abc];
                            disco[contador_disco].numeral++;
                            string s_num = to_string(disco[contador_disco].numeral);
@@ -411,8 +459,8 @@ void montajeMount(char _path[],char _name[]){
                strcpy(disco[contador_disco].mbr_particion[cont_Part].part_name,mbr->mbr_particion[cont_Part].part_name);
                strcpy(disco[contador_disco].mbr_particion[cont_Part].part_fit,mbr->mbr_particion[cont_Part].part_fit);
                //generando id
-               id_generado[0]='V';
-               id_generado[1]='D';
+               id_generado[0]='v';
+               id_generado[1]='d';
                id_generado[2]=letra;
                //into to string
                disco[contador_disco].numeral++;
@@ -483,8 +531,8 @@ void montajeMount(char _path[],char _name[]){
                                        strcpy(disco[contador_disco].ebr_logicas[incre].part_name,ebr_log->part_name);
 
                                        //generar id
-                                       id_generado[0]='V';
-                                       id_generado[1]='D';
+                                       id_generado[0]='v';
+                                       id_generado[1]='d';
                                        id_generado[2]=abdecedario[contador_abc];
                                        disco[contador_disco].numeral++;
                                        string s_num = to_string(disco[contador_disco].numeral);
