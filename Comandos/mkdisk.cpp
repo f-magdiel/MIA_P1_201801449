@@ -114,12 +114,12 @@ void crearDiscos(char path[],char name[],char size[]){
     //se escribe el disco
     FILE *file; //se crea el file para escribir en ello
     file = fopen(path_disco.c_str(),"w+b");// en modo escribir binario
-    fseek(file,size_bytes,SEEK_SET);//se posicion donde termina el mbr
-    fwrite("0",1,1,file);//se escribe el disco
-    //fseek(file,0,SEEK_SET);
-    //for (int i = 0; i < size_bytes; ++i) {
-    //    fwrite("0",1,1,file);
-    //}
+    /*fseek(file,size_bytes,SEEK_SET);//se posicion donde termina el mbr
+    fwrite("0",1,1,file);//se escribe el disco*/
+    fseek(file,0,SEEK_SET);
+    for (int i = 0; i < size_bytes; ++i) {
+        fwrite("0",1,1,file);
+    }
     fseek(file,0,SEEK_SET);//se posiciona al principio del disco
     fwrite(mbr,sizeof (MBR),1,file);// se escribe el mbr
 

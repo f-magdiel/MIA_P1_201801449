@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace std;
-typedef struct EBR : public error_code {
+typedef struct EBR{
     char part_fit[3];
     int part_start;
     int part_size;

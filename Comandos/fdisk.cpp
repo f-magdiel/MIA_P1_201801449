@@ -6,6 +6,7 @@
 #include "mkdisk.h"
 #include "../Estructuras/MBR.h"
 #include "../Estructuras/EBR.h"
+#include "../Comandos/mount.h"
 using namespace std;
 
 bool validacionDisco(char path[]){
@@ -142,6 +143,8 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
                             strcpy(mbr->mbr_particion[i].part_fit,_fit);
                             strcpy(mbr->mbr_particion[i].part_name,_name);
 
+                            //para agregar en el mount
+                            agregarParticionMount(_path,_name,size_Particion,'p',_fit,mbr->mbr_particion[i].part_start,0);
                             //se actualiza el mbr
                             fseek(file,0,SEEK_SET);
                             fwrite(mbr,sizeof(MBR),1,file);
@@ -193,6 +196,7 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
                             strcpy(mbr->mbr_particion[i].part_fit,_fit);
                             strcpy(mbr->mbr_particion[i].part_name,_name);
 
+                            agregarParticionMount(_path,_name,size_Particion,'p',_fit,mbr->mbr_particion[i].part_start,0);
                             //ebr se setea
                             EBR *ebr = (EBR*) malloc(sizeof (EBR));
                             ebr->part_start = 0;
@@ -232,7 +236,7 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
     }else if(_type=='l'){//para logica
         EBR *ebr = (EBR*) malloc(sizeof (EBR));
         int contadorLog = contadorLogicas(mbr,ebr,file);
-        cout << "Logicas="<<contadorLog<<endl;
+
         if(contadorLog<=24){
             bool repeatNameLogica = validacionNombreLogica(mbr,ebr,file,_name);
             //se validara si existe nombre repetidos y se creara mas ebr
@@ -259,6 +263,8 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
                             strcpy(ebr->part_fit,_fit);
                             strcpy(ebr->part_name,_name);
                             ebr->part_next = ebr->part_start+ebr->part_size+1;
+
+                            agregarParticionMount(_path,_name,size,'l',_fit,ebr->part_start,ebr->part_next);
 
                             //actualizo el ebr
                             fseek(file,ebr->part_start,SEEK_SET);
@@ -302,6 +308,9 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
                                 ebr->part_next = ebr->part_size+ebr->part_start+1;
                                 strcpy(ebr->part_fit,_fit);
                                 strcpy(ebr->part_name,_name);
+
+                                agregarParticionMount(_path,_name,size,'l',_fit,ebr->part_start,ebr->part_next);
+
                                 fseek(file,ebr->part_start,SEEK_SET);
                                 fwrite(ebr,sizeof (EBR),1,file);
                                 cout << " Aviso -> Particion logica creada y agregada correctamente"<<endl;
@@ -321,6 +330,8 @@ void crearParticion(char _size[],char _unit,char _path[],char _type,char _fit[],
                                     ebr->part_next = -1;
                                     strcpy(ebr->part_fit,_fit);
                                     strcpy(ebr->part_name,_name);
+
+                                    agregarParticionMount(_path,_name,size,'l',_fit,ebr->part_start,ebr->part_next);
 
                                     fseek(file,ebr->part_start,SEEK_SET);
                                     fwrite(ebr,sizeof (EBR),1,file);
@@ -419,12 +430,13 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
     fread(mbr,sizeof (MBR),1,file);
     //tipo de delete
     if(strcmp(_delete,"fast")==0){
+        //se busca en las 4 particiones el nombre
         for (int i = 0; i < 4; ++i) {
             if(strcmp(mbr->mbr_particion[i].part_name,_name)==0){// si existe particion
                 //mensaje
                 validacionParticion = true;//existe
                 char res;
-                cout << "Desea eliminar la partcion "<<_name<< " (S/N): ";
+                cout << "Desea eliminar la particion "<<_name<< " (S/N): ";
                 cin >> res;
                 if(res=='s'|| res=='S'){
                     //se actuliaza el mbr
@@ -434,6 +446,9 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                     mbr->mbr_particion[i].part_status = '-';
                     memset(mbr->mbr_particion[i].part_fit,0,3);
                     memset(mbr->mbr_particion[i].part_name,0,16);
+
+                    elimininarParticionMount(_path,_name);
+
                     //se escribe
                     fseek(file,0,SEEK_SET);
                     fwrite(mbr,sizeof (MBR),1,file);
@@ -450,7 +465,54 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
 
 
             }
+            //para buscar en las logicas
+            if(mbr->mbr_particion[i].part_type=='e'){
+
+                //se leen los ebr
+                EBR *ebrlog = (EBR*) malloc(sizeof (EBR));
+                fseek(file,mbr->mbr_particion[i].part_start+sizeof (EBR)+1,SEEK_SET);
+                fread(ebrlog,sizeof (EBR),1,file);
+                int next = ebrlog->part_next;
+                while(next!=-1){
+                    if(strcmp(ebrlog->part_name,_name)==0){//si encuentra el nombre
+                        validacionParticion=true;
+                        char res;
+                        cout << "Desea eliminar la partiicon "<<_name<<" (S/N): ";
+                        cin>>res;
+
+                        if(res=='s'||res=='S'){
+                            int start = ebrlog->part_start;
+                            ebrlog->part_start = 0;
+                            ebrlog->part_size = 0;
+                            memset(ebrlog->part_fit,0,3);
+                            memset(ebrlog->part_name,0,16);
+
+                            elimininarParticionMount(_path,_name);
+
+                            fseek(file,start,SEEK_SET);
+                            fwrite(ebrlog,sizeof (EBR),1,file);
+                            fclose(file);
+                            cout << "Aviso -> Particion eliminada correctamente en modo fast "<<_name<<endl;
+                            break;
+                        }else if(res=='n'||res=='N'){
+                            fclose(file);
+                            break;
+                        }else{
+                            fclose(file);
+                            cout << "Error -> Caracter incorrecta"<<endl;
+                        }
+
+
+                    }
+                    fseek(file,next,SEEK_SET);
+                    fread(ebrlog,sizeof(EBR),1,file);
+                    next = ebrlog->part_next;
+
+                }
+            }
         }
+
+
         if(!validacionParticion){
             cout << "Error -> La particion no existe para ser eliminado "<< _name<<endl;
         }
@@ -474,6 +536,9 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                         mbr->mbr_particion[i].part_status = '-';
                         memset(mbr->mbr_particion[i].part_fit,0,3);
                         memset(mbr->mbr_particion[i].part_name,0,16);
+
+                        elimininarParticionMount(_path,_name);
+
                         //se escribe
                         fseek(file,0,SEEK_SET);
                         fwrite(mbr,sizeof (MBR),1,file);
@@ -506,6 +571,7 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                                 fseek(file,j,SEEK_SET);
                                 fwrite("0",1,1,file);
                             }
+                            elimininarParticionMount(_path,ebr->part_name);
                             fseek(file,pos,SEEK_SET);
                             fread(ebr,sizeof (EBR),1,file);
                         }
@@ -514,7 +580,7 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                             fwrite("0",1,1,file);
                         }
 
-                        //se elimina particion
+                        //se elimina particion de las 4
                         for (int j = mbr->mbr_particion[i].part_start; j < mbr->mbr_particion[i].part_start+sizeof (MBR); ++j) {
                             fseek(file,j,SEEK_SET);
                             fwrite("0",1,1,file);
@@ -526,6 +592,9 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                         mbr->mbr_particion[i].part_status = '-';
                         memset(mbr->mbr_particion[i].part_fit,0,3);
                         memset(mbr->mbr_particion[i].part_name,0,16);
+
+                        elimininarParticionMount(_path,_name);
+
                         //se escribe
                         fseek(file,0,SEEK_SET);
                         fwrite(mbr,sizeof (MBR),1,file);
@@ -542,6 +611,43 @@ void deleteParticion(char _name[],char _path[],char _delete[]){
                     }
                 }
 
+            }
+
+            //para buscar en las logicas
+            if(mbr->mbr_particion[i].part_type=='e'){
+                EBR *ebrlog = (EBR*) malloc(sizeof (EBR));
+                int inicio = mbr->mbr_particion[i].part_start+sizeof (EBR)+1;
+                fseek(file,inicio,SEEK_SET);
+                fread(ebrlog,sizeof(EBR),1,file);
+                int next = ebrlog->part_next;
+                while(next!=-1){
+                    validacionParticion=true;
+                    char res;
+                    cout << "Desea eliminar la particin "<<_name<<" (S/N): ";
+                    cin >> res;
+                    if(res=='s'||res=='S'){
+                        int start = ebrlog->part_start;
+                        ebrlog->part_start = 0;
+                        ebrlog->part_size = 0;
+                        memset(ebrlog->part_fit,0,3);
+                        memset(ebrlog->part_name,0,16);
+
+                        elimininarParticionMount(_path,_name);
+
+                        fseek(file,start,SEEK_SET);
+                        fwrite(ebrlog,sizeof (EBR),1,file);
+                        fclose(file);
+                        cout << "Aviso -> Particion eliminada correctamente en modo full "<<_name<<endl;
+                        break;
+                    }else if(res=='n' || res=='N'){
+                        fclose(file);
+                        break;
+                    }else{
+                        fclose(file);
+                        cout << "Error -> Caracter incorrecta"<<endl;
+                    }
+
+                }
             }
         }
         if(!validacionParticion){
@@ -587,24 +693,26 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     fseek(file,mbr->mbr_particion[i].part_start+sizeof(EBR)+1,SEEK_SET);
                     fread(ebr,sizeof (EBR),1,file);
                     int next = ebr->part_start;
-                    while(next!=-1){
-                        fseek(file,next,SEEK_SET);
-                        fread(ebr,sizeof (EBR),1,file);
+                    if(next!=-1){
+                        while(next!=0){
+                            fseek(file,next,SEEK_SET);
+                            fread(ebr,sizeof (EBR),1,file);
+                            //se guardan las logicas
+                            ebrs[contador_ebr].part_next = ebr->part_next;
+                            ebrs[contador_ebr].part_start = 0;
+                            ebrs[contador_ebr].part_size = ebr->part_size;
+                            strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
+                            strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
+                            contador_ebr++;
+                            next = ebr->part_next;
+                        }
                         //se guardan las logicas
                         ebrs[contador_ebr].part_next = ebr->part_next;
-                        ebrs[contador_ebr].part_start = 0;
+                        ebrs[contador_ebr].part_start = ebr->part_start;
                         ebrs[contador_ebr].part_size = ebr->part_size;
                         strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
                         strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
-                        contador_ebr++;
-                        next = ebr->part_next;
                     }
-                    //se guardan las logicas
-                    ebrs[contador_ebr].part_next = ebr->part_next;
-                    ebrs[contador_ebr].part_start = ebr->part_start;
-                    ebrs[contador_ebr].part_size = ebr->part_size;
-                    strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
-                    strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
 
                 }
             }
@@ -636,6 +744,7 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     mbraux->mbr_particion[i].part_start = size_usado+sizeof (MBR)+1;
 
                     //paso de datos
+                    mbraux->mbr_particion[i].part_status = mbr->mbr_particion[i].part_status;
                     mbraux->mbr_particion[i].part_size = nuevosize;
                     mbraux->mbr_particion[i].part_type = mbr->mbr_particion[i].part_type;
                     strcpy(mbraux->mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
@@ -655,6 +764,7 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     mbraux->mbr_particion[i].part_start = size_usado+sizeof (MBR)+1;
 
                     //paso de datos
+                    mbraux->mbr_particion[i].part_status = mbr->mbr_particion[i].part_status;
                     mbraux->mbr_particion[i].part_size = nuevosize;
                     mbraux->mbr_particion[i].part_type = mbr->mbr_particion[i].part_type;
                     strcpy(mbraux->mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
@@ -674,12 +784,13 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     int inicio =0;
 
                     inicio = mbraux->mbr_particion[i].part_start+sizeof (EBR)+1;
-
+                    int c_log=0;
                     while(ebrs[contador_array].part_next!=-1){
+                        c_log++;
                         ebraux->part_size = ebrs[contador_array].part_size;
                         ebraux->part_start = inicio;
                         siguiente = ebraux->part_size+ebraux->part_start+1;
-                        ebraux->part_size = ebraux->part_size+ebraux->part_start+1;
+                        ebraux->part_next = ebraux->part_size+ebraux->part_start+1;
                         strcpy(ebraux->part_fit,ebrs[contador_array].part_fit);
                         strcpy(ebraux->part_name,ebrs[contador_array].part_name);
                         cout << ebraux->part_name<<endl;
@@ -687,8 +798,33 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                         fwrite(ebraux,sizeof (EBR),1,file);
                         inicio = siguiente;
                         contador_array++;
+                        if(c_log<=23){
+                            EBR* ebrc = (EBR*) malloc(sizeof (EBR));
+                            ebrc->part_start = 0;
+                            ebrc->part_size = 0;
+                            ebrc->part_next = -1;
+                            memset(ebrc->part_fit,0,3);
+                            memset(ebrc->part_name,0,16);
+                            fseek(file,inicio,SEEK_SET);
+                            fwrite(ebrc,sizeof (EBR),1,file);
+
+                        }
 
                     }
+
+                    //cuanod no hay particiones logicas en el mbr
+                    if(c_log==0){
+                        EBR* ebrc = (EBR*) malloc(sizeof (EBR));
+                        ebrc->part_start = 0;
+                        ebrc->part_size = 0;
+                        ebrc->part_next = -1;
+                        memset(ebrc->part_fit,0,3);
+                        memset(ebrc->part_name,0,16);
+                        fseek(file,inicio,SEEK_SET);
+                        fwrite(ebrc,sizeof (EBR),1,file);
+                    }
+
+
                    /* //último
                     fseek(file,inicio,SEEK_SET);
                     ebraux->part_next = -1;
@@ -738,24 +874,28 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     fseek(file,mbr->mbr_particion[i].part_start+sizeof(EBR)+1,SEEK_SET);
                     fread(ebr,sizeof (EBR),1,file);
                     int next = ebr->part_start;
-                    while(next!=-1){
-                        fseek(file,next,SEEK_SET);
-                        fread(ebr,sizeof (EBR),1,file);
+                    // no se ha escrito nada el nexto es -1 al principio
+                    if(next!=-1){
+                        while(next!=0){
+                            fseek(file,next,SEEK_SET);
+                            fread(ebr,sizeof (EBR),1,file);
+                            //se guardan las logicas
+                            ebrs[contador_ebr].part_next = ebr->part_next;
+                            ebrs[contador_ebr].part_start = 0;
+                            ebrs[contador_ebr].part_size = ebr->part_size;
+                            strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
+                            strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
+                            contador_ebr++;
+                            next = ebr->part_next;
+                        }
                         //se guardan las logicas
                         ebrs[contador_ebr].part_next = ebr->part_next;
-                        ebrs[contador_ebr].part_start = 0;
+                        ebrs[contador_ebr].part_start = ebr->part_start;
                         ebrs[contador_ebr].part_size = ebr->part_size;
                         strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
                         strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
-                        contador_ebr++;
-                        next = ebr->part_next;
                     }
-                    //se guardan las logicas
-                    ebrs[contador_ebr].part_next = ebr->part_next;
-                    ebrs[contador_ebr].part_start = ebr->part_start;
-                    ebrs[contador_ebr].part_size = ebr->part_size;
-                    strcpy(ebrs[contador_ebr].part_name,ebr->part_name);
-                    strcpy(ebrs[contador_ebr].part_fit,ebr->part_fit);
+
 
                 }
             }
@@ -787,6 +927,7 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     mbraux->mbr_particion[i].part_start = size_usado+sizeof (MBR)+1;
 
                     //paso de datos
+                    mbraux->mbr_particion[i].part_status = mbr->mbr_particion[i].part_status;
                     mbraux->mbr_particion[i].part_size = nuevosize;
                     mbraux->mbr_particion[i].part_type = mbr->mbr_particion[i].part_type;
                     strcpy(mbraux->mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
@@ -806,6 +947,7 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     mbraux->mbr_particion[i].part_start = size_usado+sizeof (MBR)+1;
 
                     //paso de datos
+                    mbraux->mbr_particion[i].part_status = mbr->mbr_particion[i].part_status;
                     mbraux->mbr_particion[i].part_size = nuevosize;
                     mbraux->mbr_particion[i].part_type = mbr->mbr_particion[i].part_type;
                     strcpy(mbraux->mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
@@ -825,21 +967,46 @@ void addParticion(char _add[],char _unit,char _path[],char _name[]){
                     int inicio =0;
 
                     inicio = mbraux->mbr_particion[i].part_start+sizeof (EBR)+1;
-
+                    int c_log=0;
                     while(ebrs[contador_array].part_next!=-1){
                         ebraux->part_size = ebrs[contador_array].part_size;
                         ebraux->part_start = inicio;
                         siguiente = ebraux->part_size+ebraux->part_start+1;
-                        ebraux->part_size = ebraux->part_size+ebraux->part_start+1;
+                        ebraux->part_next = ebraux->part_size+ebraux->part_start+1;
                         strcpy(ebraux->part_fit,ebrs[contador_array].part_fit);
                         strcpy(ebraux->part_name,ebrs[contador_array].part_name);
                         cout << ebraux->part_name<<endl;
                         fseek(file,inicio,SEEK_SET);
                         fwrite(ebraux,sizeof (EBR),1,file);
+                        c_log++;
                         inicio = siguiente;
                         contador_array++;
+                        if(c_log<=23){
+                            EBR* ebrc = (EBR*) malloc(sizeof (EBR));
+                            ebrc->part_start = 0;
+                            ebrc->part_size = 0;
+                            ebrc->part_next = -1;
+                            memset(ebrc->part_fit,0,3);
+                            memset(ebrc->part_name,0,16);
+                            fseek(file,inicio,SEEK_SET);
+                            fwrite(ebrc,sizeof (EBR),1,file);
 
+                        }
                     }
+
+                    //cuanod no hay particiones logicas en el mbr
+                    if(c_log==0){
+                        EBR* ebrc = (EBR*) malloc(sizeof (EBR));
+                        ebrc->part_start = 0;
+                        ebrc->part_size = 0;
+                        ebrc->part_next = -1;
+                        memset(ebrc->part_fit,0,3);
+                        memset(ebrc->part_name,0,16);
+                        fseek(file,inicio,SEEK_SET);
+                        fwrite(ebrc,sizeof (EBR),1,file);
+                    }
+
+
                     cout << "Aviso -> Se ha reducido el espacio en particion extendida "<<_name<<endl;
 
                 }
