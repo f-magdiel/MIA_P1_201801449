@@ -11,6 +11,8 @@ void agregarParticionMount(char _path[],char _name[],int size,char _type, char _
 void elimininarParticionMount(char _path[],char _name[]);
 void showMount();
 void desmontarMount(char []);
+void repMbr(char [],char [],char[],char[]);
+void repDisk(char [],char [],char [],char []);
 
 
 

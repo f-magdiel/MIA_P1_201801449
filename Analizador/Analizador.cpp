@@ -12,6 +12,7 @@ using namespace std;
 #include "../Comandos/fdisk.h"
 #include "../Comandos/mount.h"
 #include "../Comandos/unmount.h"
+#include "../Comandos/rep.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -66,7 +67,8 @@ void analizadorGeneral(char comando[]){
         }else if (strcmp(lineacomando,"pause")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"rep")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analisisRep(comando);
+            memset(lineacomando,0,100);
         }
      }
  }

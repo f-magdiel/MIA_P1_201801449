@@ -68,7 +68,7 @@ bool validacionPath(string path){
         closedir(directorio);
         return true;
     }else{
-
+        closedir(directorio);
         return false;
     }
 
