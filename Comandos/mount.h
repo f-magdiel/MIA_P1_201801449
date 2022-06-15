@@ -1,8 +1,9 @@
 #ifndef MIA_P1_201801449_MOUNT_H
 #define MIA_P1_201801449_MOUNT_H
-
+#include "../Estructuras/DISCO.h"
 #include <iostream>
 #include <ctime>
+#include <string>
 //funciones
 void analisisMount(char[]);
 bool validacionPathMount(char []);
@@ -13,6 +14,9 @@ void showMount();
 void desmontarMount(char []);
 void repMbr(char [],char [],char[],char[]);
 void repDisk(char [],char [],char [],char []);
+
+//para el mkfs
+DISCO buscarDisco(char []);
 
 
 

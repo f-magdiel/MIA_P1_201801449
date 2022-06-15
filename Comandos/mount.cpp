@@ -17,7 +17,90 @@ char abdecedario[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o
 int contador_abc=0;
 int contador_disco=0;
 vector <string> nodos;
+
+//para mkfs
+DISCO buscarDisco(char _id[]){
+    DISCO nulo;
+    for (int i = 0; i < 99; ++i) {
+        if(disco[i].mbr_tamano!=0){
+            for (int j = 0; j < 4; ++j) {
+                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){
+                    return disco[i];
+                    break;
+                }
+
+            }
+        }
+    }
+    return nulo;
+}
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>REPORTES<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+void repDisk(char _id[],char _namerep[],char _path[],char _dir[]){
+    bool flag_rep=false;
+    string dir = charToString(_dir);
+    string name_dot = dir+charToString(_namerep)+".dot";
+    int suma=0;
+
+    for (int i = 0; i < 99; ++i) {
+        if(disco[i].mbr_tamano!=0){
+            for (int j = 0; j < 4; ++j) {
+                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){
+                    flag_rep=true;
+                    //generando .dot
+                    ofstream fs(name_dot);
+                    fs << "digraph G{"<<endl;
+                    fs << "tbl ["<<endl;
+                    fs << "shape=plaintext"<<endl;
+                    fs << "label=<"<<endl,
+                    fs << "<table border='2' cellborder='0' color='blue' cellspacing='1'>"<<endl;
+                    fs << "<tr>"<<endl;
+                    fs << "<td colspan='1' rowspan='1'>"<<endl;
+                    fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                    fs << "<tr><td>MBR</td></tr>"<<endl;
+                    fs << "</table>"<<endl;
+                    fs << "</td>"<<endl;
+
+                    for (int k = 0; k < 4; ++k) {
+                        if(disco[i].mbr_particion[k].part_type=='p'){
+                            int sizeP, sizeOP = 0;
+                            sizeP = disco[i].mbr_particion[k].part_size;
+                            sizeOP = (sizeP*100)/disco[i].mbr_tamano;
+                            string tam = to_string(sizeOP);
+                            suma +=sizeP;
+                            fs << "<td colspan='1' rowspan='1'>"<<endl;
+                            fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                            fs << "<tr><td>Primaria <br/>"+tam+"% del disco</td></tr>"<<endl;
+                            fs << "</table>"<<endl;
+                            fs << "</td>"<<endl;
+
+                        }else if(disco[i].mbr_particion[k].part_type=='e'){
+                            fs << "<td colspan='1' rowspan='1'>"<<endl;
+                            fs << "<table color='red' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                            fs << "<tr>"<<endl;
+                            int sizeP, sizeOP = 0;
+                            sizeP = disco[i].mbr_particion[k].part_size;
+                            sizeOP = (sizeP*100)/disco[i].mbr_tamano;
+                            string tam = to_string(sizeOP);
+                            suma+= sizeP;
+                            for (int l = 0; l < 24; ++l) {
+                                if(disco[i].ebr_logicas[l].part_size!=0){
+                                    fs << "<td>EBR</td><td> Logica <br/>"<<endl;
+                                    //<<<<<<<<<<<<<<<<<<<< PENDIENTE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+    }
+}
+
 void repMbr(char _id[],char _namerep[],char _path[],char _dir[]){
     bool flag_rep = false;
     string dir = charToString(_dir);

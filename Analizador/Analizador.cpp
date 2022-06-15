@@ -13,6 +13,7 @@ using namespace std;
 #include "../Comandos/mount.h"
 #include "../Comandos/unmount.h"
 #include "../Comandos/rep.h"
+#include "../Comandos/mkfs.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -53,7 +54,8 @@ void analizadorGeneral(char comando[]){
             analisisUnmount(comando);
             memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"mkfs")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analisisMkfs(comando);
+            memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"mkfile")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"rm")==0){
