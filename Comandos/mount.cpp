@@ -6,6 +6,9 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include <cmath>
+#include <iomanip>
+#include <sstream>
 
 #include "../Estructuras/DISCO.h"
 #include "../Estructuras/MBR.h"
@@ -25,6 +28,7 @@ DISCO buscarDisco(char _id[]){
         if(disco[i].mbr_tamano!=0){
             for (int j = 0; j < 4; ++j) {
                 if(strcmp(disco[i].mbr_particion[j].id,_id)==0){
+                    strcpy(disco[i].mbr_particion[j].formato,"full");
                     return disco[i];
                     break;
                 }
@@ -45,8 +49,8 @@ void repDisk(char _id[],char _namerep[],char _path[],char _dir[]){
     for (int i = 0; i < 99; ++i) {
         if(disco[i].mbr_tamano!=0){
             for (int j = 0; j < 4; ++j) {
-                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){
-                    flag_rep=true;
+                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// sin son las 4 basicas
+                    cout << "Encuentra particion"<<endl;
                     //generando .dot
                     ofstream fs(name_dot);
                     fs << "digraph G{"<<endl;
@@ -70,10 +74,16 @@ void repDisk(char _id[],char _namerep[],char _path[],char _dir[]){
                             suma +=sizeP;
                             fs << "<td colspan='1' rowspan='1'>"<<endl;
                             fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
-                            fs << "<tr><td>Primaria <br/>"+tam+"% del disco</td></tr>"<<endl;
+                            fs << "<tr><td>Primaria <br/>Nombre:"+ charToString(disco[i].mbr_particion[k].part_name)+"<br/> Formato: "+charToString(disco[i].mbr_particion[k].formato)+" <br/>"+tam+" % del disco</td></tr>"<<endl;
                             fs << "</table>"<<endl;
                             fs << "</td>"<<endl;
 
+                        }else if(disco[i].mbr_particion[k].part_size==0){
+                            fs << "<td colspan='1' rowspan='1'>"<<endl;
+                            fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                            fs << "<tr><td>Libre</td></tr>"<<endl;
+                            fs << "</table>"<<endl;
+                            fs << "</td>"<<endl;
                         }else if(disco[i].mbr_particion[k].part_type=='e'){
                             fs << "<td colspan='1' rowspan='1'>"<<endl;
                             fs << "<table color='red' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
@@ -85,20 +95,35 @@ void repDisk(char _id[],char _namerep[],char _path[],char _dir[]){
                             suma+= sizeP;
                             for (int l = 0; l < 24; ++l) {
                                 if(disco[i].ebr_logicas[l].part_size!=0){
-                                    fs << "<td>EBR</td><td> Logica <br/>"<<endl;
-                                    //<<<<<<<<<<<<<<<<<<<< PENDIENTE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                    double size = disco[i].ebr_logicas[l].part_size;
+                                    double sizedisk = disco[i].mbr_tamano;
+                                    double op = (size*100)/sizedisk;
+                                    stringstream tmp;
+                                    tmp << setprecision(3) << fixed << op;
+                                    string res = tmp.str();
+                                    cout << res << endl;
+                                    fs << "<td>EBR</td><td>"+charToString(disco[i].ebr_logicas[l].part_name) +"<br/> "+res+" % del disco</td>"<<endl;
                                 }
                             }
+                            fs << "<td>Libre</td>"<<endl;
+                            fs <<"</tr>"<<endl;
+                            fs << "</table>"<<endl;
+                            fs << "</td>"<<endl;
 
                         }
                     }
-
+                    fs << "</tr>"<<endl;
+                    fs << "</table>"<<endl;
+                    fs << ">];"<<endl;
+                    fs << "}"<<endl;
+                    fs.close();
                 }
 
             }
 
         }
     }
+
 }
 
 void repMbr(char _id[],char _namerep[],char _path[],char _dir[]){

@@ -22,7 +22,7 @@ typedef struct PART{
     int part_size;
     char part_name[16];
     char id[10];
-
+    char formato[10];
 }PART;
 
 typedef struct DISCO{

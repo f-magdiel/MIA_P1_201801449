@@ -446,9 +446,9 @@ void analisisRep(char comando[]){
     }
     //obtengo el nombre del reporte
 
-    cout << "Directorio = "<<direc<<endl;
+    /*cout << "Directorio = "<<direc<<endl;
     cout << "Path = "<<valor_path<<endl;
-    cout << "nombre rep = "<<nombre_rep<<endl;
+    cout << "nombre rep = "<<nombre_rep<<endl;*/
     bool flag_directorio = validacionDirectorioReporte(direc);
     bool flag_rep = validacionReporte(valor_path);
 
@@ -488,7 +488,7 @@ void analisisRep(char comando[]){
                 if(flag_mbr){
                     repMbr(valor_id,valor_name,valor_path,direc);
                 }else if(flag_disk){
-
+                    repDisk(valor_id,valor_name,valor_path,direc);
                 }
 
             }
@@ -502,7 +502,7 @@ void analisisRep(char comando[]){
             if(flag_mbr){
                 repMbr(valor_id,valor_name,valor_path,direc);
             }else if(flag_disk){
-
+                repDisk(valor_id,valor_name,valor_path,direc);
             }else if(flag_tree){
                 //se genera rep del arbol
                 repTree(valor_id,valor_name,valor_path,direc);
