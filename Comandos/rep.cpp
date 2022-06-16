@@ -92,9 +92,8 @@ string BlockFolder_Tabla(int indice,BLOQUECARPETA *blockfolder,int tree){
     tablefolder += "\t\t\t<tr><td>B_NAME</td><td>B_INODO</td></tr>\n";
     for(int i=0;i<4;i++){
         indicebloque =  (((int)blockfolder->b_content[i].b_inodo)>0)?"PORT = \"B"+to_string(i)+"\"":"";
-        cout << "SUUUUUUUUUUUUUUUUUUUUUUUUUUIIIIIIII "<<blockfolder->b_content[i].b_name<<endl;
-        tablefolder += "\t\t\t<tr><td>SIUUU"+charToString(blockfolder->b_content[i].b_name)+"</td><td "+indicebloque+">"+to_string(blockfolder->b_content[i].b_inodo)+"</td></tr>\n";
-        if(charToString(blockfolder->b_content[i].b_name) =="."|| charToString(blockfolder->b_content[i].b_name) ==".."){
+        tablefolder += "\t\t\t<tr><td>"+charToString(blockfolder->b_content[i].b_name)+"</td><td "+indicebloque+">"+to_string(blockfolder->b_content[i].b_inodo)+"</td></tr>\n";
+        if(charToString(blockfolder->b_content[i].b_name) =="/"|| charToString(blockfolder->b_content[i].b_name) ==" "){
 
         }else{
             conexionesainodos += indicebloque != ""?"\nBloque"+to_string(indice)+":"+"B"+to_string(i)+" -> Inodo"+to_string(blockfolder->b_content[i].b_inodo)+":I"+to_string(blockfolder->b_content[i].b_inodo)+";":"";
@@ -155,7 +154,7 @@ string InodoTabla(int indice,INODOS * inode,int tree){
         El siguiente tiene el mismo valor C ya que es para que apunte al encabezado del bloque
     */
     tableinode += "\t\t\t<tr><td>i_type</td><td>";
-    tableinode += to_string(inode->i_type);
+    tableinode += inode->i_type;
     tableinode += "</td></tr>\n";
     tableinode += "\t\t\t<tr><td>i_perm</td><td>";
     tableinode += "Si";
@@ -245,6 +244,7 @@ void repTree(char _id[], char _name[], char _path[],char _dir[]){
             allbloques+= BlockFolder_Tabla(i,&readcarpeta,1);
         }else if(bit_bloques[i]=='2'){
             //para archivos
+
             BLOQUEARCHIVO readarchivo;
             fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
             fread(&readarchivo,64,1,file);

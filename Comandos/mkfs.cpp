@@ -128,13 +128,15 @@ void crearEXT3(DISCO disco,char _id[]){
 
         //bloque carpeta raiz
         BLOQUECARPETA carpetaraiz;
+        BLOQUEARCHIVO archivoraiz;
         CONTENT contentraiz;
-        strcpy(contentraiz.b_name,".");//carpeta actual
+        //limpio
+        strcpy(contentraiz.b_name,"/");//carpeta actual
         contentraiz.b_inodo = 0;//apuntador inodo
         carpetaraiz.b_content[0] = contentraiz;//guardamos la carpeta
 
-        strcpy(contentraiz.b_name,"..");//el padre
-        carpetaraiz.b_content[1]=contentraiz;// se agrega la carpeta padre
+        //strcpy(contentraiz.b_name,"..");//el padre
+        //carpetaraiz.b_content[1]=contentraiz;// se agrega la carpeta padre
 
         //se escribe el inodo y el bloque de la carpeta raiz
         //escribe el inodo
@@ -146,6 +148,10 @@ void crearEXT3(DISCO disco,char _id[]){
         fseek(file,auxsuper.s_block_start,SEEK_SET);
         fwrite(&carpetaraiz,sizeof (BLOQUECARPETA),1,file);
         auxsuper.s_free_blocks_count--;//se disminuye
+
+        //escribo bloque archivo
+        fseek(file,auxsuper.s_block_start+64,SEEK_SET);
+        fwrite(&archivoraiz,64,1,file);
 
         //rescribo el SUPERBLOQUE
         fseek(file,mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1,SEEK_SET);
