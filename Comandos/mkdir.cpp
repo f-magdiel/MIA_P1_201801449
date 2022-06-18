@@ -496,7 +496,7 @@ void ejecutarMkdir(char _id[],char _directorio[]){
             strcpy(auxjournaling.journal_propietario,"root");
             strcpy(auxjournaling.journal_persimo,"root");
             strcpy(auxjournaling.journal_nombre,"directorio");
-            strcpy(auxjournaling.journal_contenido,"directorio");
+            strcpy(auxjournaling.journal_contenido,"ruta");
             strcpy(auxjournaling.jorunal_tipo_operacion,"crear");
             //generar el tiempo
             time_t timecurrent;

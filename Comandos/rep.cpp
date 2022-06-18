@@ -12,9 +12,65 @@
 #include "../Estructuras/BLOQUEARCHIVO.h"
 #include "../Estructuras/BLOQUECARPETA.h"
 #include "../Estructuras/APUNTADORES.h"
+#include "../Estructuras/JOURNALING.h"
 
 using namespace std;
-void repInodos(char _id[], char _name[],char _path[],char _dir[]){
+
+void repJournaling(char _id[],char _name[],char _path[],char _dir[]){
+    string dir = charToString(_dir);
+    string name_dot = dir+charToString(_name)+".dot";
+
+    string graphsuper;
+    DISCO disco = buscarDisco(_id);
+    //se lee
+    FILE *file;
+    file = fopen(disco.path,"rb+");
+    MBR mbr;
+    fseek(file,0,SEEK_SET);
+    fread(&mbr,sizeof (MBR),1,file);
+    int indice=0;
+    string nombre_buscar;
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(disco.mbr_particion[i].id,_id)==0){
+            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+            break;
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+            indice=i;
+            break;
+        }
+    }
+    //se leer el jorunaling
+    JOURNALING jour;
+    int iniciojour = mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+sizeof(SUPER_BLOQUE)+1;
+    fseek(file,iniciojour,SEEK_SET);
+    fread(&jour,sizeof(JOURNALING),1,file);
+
+    ofstream fs(name_dot);
+    fs << "digraph J {"<<endl;
+    fs << "TableJour ["<<endl;
+    fs << "shape=plaintext"<<endl;
+    fs << "color=forestgreen"<<endl;
+    fs << "label=<"<<endl;
+    fs << "<table border='1' cellborder='1' >"<<endl;
+    fs << "<tr><td>JOURNALING </td></tr>"<<endl;
+    fs << "<tr><td>Journal_tipo_operacion</td><td>"+charToString(jour.jorunal_tipo_operacion)+"</td></tr>"<<endl;
+    fs << "<tr><td>Journal_tipo</td><td> 1 </td></tr>"<<endl;
+    fs << "<tr><td>Journal_nombre</td><td>"+charToString(jour.journal_nombre)+"</td></tr>"<<endl;
+    fs << "<tr><td>Journal_contenido</td><td>"+charToString(jour.journal_contenido)+"</td></tr>"<<endl;
+    char *fecha = ctime(&jour.journal_fecha);
+    string date = charToString(fecha);
+    fs << "<tr><td>Journal_fecha</td><td>"+date+"</td></tr>"<<endl;
+    fs << "<tr><td>Journal_propietario</td><td>root</td></tr>"<<endl;
+    fs << "<tr><td>Journal_Permisos</td><td>777</td></tr>"<<endl;
+    fs << "<tr><td>"+charToString(mbr.mbr_particion[indice].part_name)+"      "+charToString(disco.path)+" </td></tr>"<<endl;
+    fs << "</table>"<<endl;
+    fs << ">];"<<endl;
+    fs << "}"<<endl;
+    fs.close();
 
 }
 
@@ -405,6 +461,60 @@ string InodoTabla(int indice,INODOS * inode,int tree){
     return tableinode;
 }
 
+void repInodos(char _id[], char _name[],char _path[],char _dir[]){
+    string dir = charToString(_dir);
+    string name_dot = dir+charToString(_name)+".dot";
+    string graphsuper;
+    DISCO disco = buscarDisco(_id);
+    //se lee
+    FILE *file;
+    file = fopen(disco.path,"rb+");
+    MBR mbr;
+    fseek(file,0,SEEK_SET);
+    fread(&mbr,sizeof (MBR),1,file);
+    int indice=0;
+    string nombre_buscar;
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(disco.mbr_particion[i].id,_id)==0){
+            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+            break;
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+            indice=i;
+            break;
+        }
+    }
+    //se leer super
+    SUPER_BLOQUE auxsuper;
+    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+    int numeroinodos = auxsuper.s_inode_count;
+    int nodoenuso = auxsuper.s_inode_count-auxsuper.s_free_inodes_count;
+    string graficaInodos="";
+    char bitnodos[numeroinodos];
+    fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
+    fread(&bitnodos,sizeof(char),numeroinodos,file);
+    //comenzamos a graficar
+    graficaInodos+="digraph {\n";
+    //iniciar a graficar inodos
+    for (int i = 0; i < numeroinodos; ++i) {
+        if(bitnodos[i]=='1'){
+            INODOS inodolectura;
+            fseek(file,auxsuper.s_inode_start+i*sizeof(INODOS),SEEK_SET);
+            fread(&inodolectura,sizeof(INODOS),1,file);
+            graficaInodos += InodoTabla(i,&inodolectura,0);
+            graficaInodos += "\n\n";
+        }
+    }
+    graficaInodos += "}\n";
+    ofstream fs (name_dot);
+    fs << graficaInodos<<endl;
+    fs.close();
+}
+
 //reporte del tree
 void repTree(char _id[], char _name[], char _path[],char _dir[]){
     string dir = charToString(_dir);
@@ -519,6 +629,79 @@ bool validacionDirectorioReporte(char _direc[]){
         closedir(directorio);
         return false;
     }
+}
+void repBlock(char _id[], char _name[], char _path[],char _dir[]){
+    string dir = charToString(_dir);
+    string name_dot = dir+charToString(_name)+".dot";
+
+    string graphsuper;
+    DISCO disco = buscarDisco(_id);
+    //se lee
+    FILE *file;
+    file = fopen(disco.path,"rb+");
+    MBR mbr;
+    fseek(file,0,SEEK_SET);
+    fread(&mbr,sizeof (MBR),1,file);
+    int indice=0;
+    string nombre_buscar;
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(disco.mbr_particion[i].id,_id)==0){
+            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+            break;
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+            indice=i;
+            break;
+        }
+    }
+    //se lee el super bloque
+    SUPER_BLOQUE auxsuper;
+    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+
+    string todoslosblques="";
+    int numerobloques = auxsuper.s_block_count;
+    char bitbloques[numerobloques];
+    int bloqueenuso = auxsuper.s_block_count-auxsuper.s_free_blocks_count;
+
+    //lectura de bloques
+    fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
+    fread(&bitbloques,sizeof(char),numerobloques,file);
+
+    todoslosblques+="digraph {\n";
+    todoslosblques+="rankdir=LR;\n";
+    
+    //buscar bloques
+    for (int i = 0; i < numerobloques; ++i) {
+        if(bitbloques[i]=='1'){//para carpetas
+            BLOQUECARPETA carpetaread;
+            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+            fread(&carpetaread,64,1,file);
+            todoslosblques+= BlockFolder_Tabla(i,&carpetaread,0);
+
+        }else if(bitbloques[i]=='2'){//para archivos
+            BLOQUEARCHIVO archivoread;
+            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+            fread(&archivoread,64,1,file);
+            todoslosblques+= BlockFile_Tabla(i,&archivoread,0);
+
+        }else if(bitbloques[i]=='3'){//para apuntadores
+            APUNTADORES pointerread;
+            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+            fread(&pointerread,64,1,file);
+            todoslosblques+= BlockPointer_Tabla(i,&pointerread,0);
+
+        }
+    }
+    //finaliznado recorrido
+    todoslosblques+="}\n";
+    ofstream fs(name_dot);
+    fs << todoslosblques<<endl;
+    fs.close();
+
 }
 
 void analisisRep(char comando[]){
@@ -744,6 +927,13 @@ void analisisRep(char comando[]){
 
             }else if(flag_bm_block){//bitmal para bloques
                 repBitmapBlock(valor_id,nombre_rep,valor_path,direc);
+            }else if(flag_inode){//reporte de inodos en uso
+                repInodos(valor_id,nombre_rep,valor_path,direc);
+
+            }else if(flag_block){//para el reporte de bloques
+                repBlock(valor_id,nombre_rep,valor_path,direc);
+            }else if(flag_journaling){//reporta para genenara journaling
+                repJournaling(valor_id,nombre_rep,valor_path,direc);
             }
 
 
