@@ -1,4 +1,4 @@
-# Install script for directory: /home/magdiel/MIA_P1_201801449
+# Install script for directory: /home/magdiel/Escritorio/MIA_P1_201801449
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/magdiel/MIA_P1_201801449/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

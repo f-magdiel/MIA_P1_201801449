@@ -46,84 +46,90 @@ void repDisk(char _id[],char _namerep[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_namerep)+".dot";
     int suma=0;
+    bool flag_existe = validacionDot(name_dot);
+    if(!flag_existe){
+        for (int i = 0; i < 99; ++i) {
+            if(disco[i].mbr_tamano!=0){
+                for (int j = 0; j < 4; ++j) {
+                    if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// sin son las 4 basicas
+                        cout << "Encuentra particion"<<endl;
+                        //generando .dot
+                        ofstream fs(name_dot);
+                        fs << "digraph G{"<<endl;
+                        fs << "tbl ["<<endl;
+                        fs << "shape=plaintext"<<endl;
+                        fs << "label=<"<<endl,
+                                fs << "<table border='2' cellborder='0' color='blue' cellspacing='1'>"<<endl;
+                        fs << "<tr>"<<endl;
+                        fs << "<td colspan='1' rowspan='1'>"<<endl;
+                        fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                        fs << "<tr><td>MBR</td></tr>"<<endl;
+                        fs << "</table>"<<endl;
+                        fs << "</td>"<<endl;
 
-    for (int i = 0; i < 99; ++i) {
-        if(disco[i].mbr_tamano!=0){
-            for (int j = 0; j < 4; ++j) {
-                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// sin son las 4 basicas
-                    cout << "Encuentra particion"<<endl;
-                    //generando .dot
-                    ofstream fs(name_dot);
-                    fs << "digraph G{"<<endl;
-                    fs << "tbl ["<<endl;
-                    fs << "shape=plaintext"<<endl;
-                    fs << "label=<"<<endl,
-                    fs << "<table border='2' cellborder='0' color='blue' cellspacing='1'>"<<endl;
-                    fs << "<tr>"<<endl;
-                    fs << "<td colspan='1' rowspan='1'>"<<endl;
-                    fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
-                    fs << "<tr><td>MBR</td></tr>"<<endl;
-                    fs << "</table>"<<endl;
-                    fs << "</td>"<<endl;
+                        for (int k = 0; k < 4; ++k) {
+                            if(disco[i].mbr_particion[k].part_type=='p'){
+                                int sizeP, sizeOP = 0;
+                                sizeP = disco[i].mbr_particion[k].part_size;
+                                sizeOP = (sizeP*100)/disco[i].mbr_tamano;
+                                string tam = to_string(sizeOP);
+                                suma +=sizeP;
+                                fs << "<td colspan='1' rowspan='1'>"<<endl;
+                                fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                                fs << "<tr><td>Primaria <br/>Nombre:"+ charToString(disco[i].mbr_particion[k].part_name)+"<br/> Formato: "+charToString(disco[i].mbr_particion[k].formato)+" <br/>"+tam+" % del disco</td></tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
 
-                    for (int k = 0; k < 4; ++k) {
-                        if(disco[i].mbr_particion[k].part_type=='p'){
-                            int sizeP, sizeOP = 0;
-                            sizeP = disco[i].mbr_particion[k].part_size;
-                            sizeOP = (sizeP*100)/disco[i].mbr_tamano;
-                            string tam = to_string(sizeOP);
-                            suma +=sizeP;
-                            fs << "<td colspan='1' rowspan='1'>"<<endl;
-                            fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
-                            fs << "<tr><td>Primaria <br/>Nombre:"+ charToString(disco[i].mbr_particion[k].part_name)+"<br/> Formato: "+charToString(disco[i].mbr_particion[k].formato)+" <br/>"+tam+" % del disco</td></tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
-
-                        }else if(disco[i].mbr_particion[k].part_size==0){
-                            fs << "<td colspan='1' rowspan='1'>"<<endl;
-                            fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
-                            fs << "<tr><td>Libre</td></tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
-                        }else if(disco[i].mbr_particion[k].part_type=='e'){
-                            fs << "<td colspan='1' rowspan='1'>"<<endl;
-                            fs << "<table color='red' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
-                            fs << "<tr>"<<endl;
-                            int sizeP, sizeOP = 0;
-                            sizeP = disco[i].mbr_particion[k].part_size;
-                            sizeOP = (sizeP*100)/disco[i].mbr_tamano;
-                            string tam = to_string(sizeOP);
-                            suma+= sizeP;
-                            for (int l = 0; l < 24; ++l) {
-                                if(disco[i].ebr_logicas[l].part_size!=0){
-                                    double size = disco[i].ebr_logicas[l].part_size;
-                                    double sizedisk = disco[i].mbr_tamano;
-                                    double op = (size*100)/sizedisk;
-                                    stringstream tmp;
-                                    tmp << setprecision(3) << fixed << op;
-                                    string res = tmp.str();
-                                    cout << res << endl;
-                                    fs << "<td>EBR</td><td>"+charToString(disco[i].ebr_logicas[l].part_name) +"<br/> "+res+" % del disco</td>"<<endl;
+                            }else if(disco[i].mbr_particion[k].part_size==0){
+                                fs << "<td colspan='1' rowspan='1'>"<<endl;
+                                fs << "<table color='orange' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                                fs << "<tr><td>Libre</td></tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
+                            }else if(disco[i].mbr_particion[k].part_type=='e'){
+                                fs << "<td colspan='1' rowspan='1'>"<<endl;
+                                fs << "<table color='red' border='1' cellborder='1' cellpadding='10' cellspacing='0'>"<<endl;
+                                fs << "<tr>"<<endl;
+                                int sizeP, sizeOP = 0;
+                                sizeP = disco[i].mbr_particion[k].part_size;
+                                sizeOP = (sizeP*100)/disco[i].mbr_tamano;
+                                string tam = to_string(sizeOP);
+                                suma+= sizeP;
+                                for (int l = 0; l < 24; ++l) {
+                                    if(disco[i].ebr_logicas[l].part_size!=0){
+                                        double size = disco[i].ebr_logicas[l].part_size;
+                                        double sizedisk = disco[i].mbr_tamano;
+                                        double op = (size*100)/sizedisk;
+                                        stringstream tmp;
+                                        tmp << setprecision(3) << fixed << op;
+                                        string res = tmp.str();
+                                        cout << res << endl;
+                                        fs << "<td>EBR</td><td>"+charToString(disco[i].ebr_logicas[l].part_name) +"<br/> "+res+" % del disco</td>"<<endl;
+                                    }
                                 }
-                            }
-                            fs << "<td>Libre</td>"<<endl;
-                            fs <<"</tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
+                                fs << "<td>Libre</td>"<<endl;
+                                fs <<"</tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
 
+                            }
                         }
+                        fs << "</tr>"<<endl;
+                        fs << "</table>"<<endl;
+                        fs << ">];"<<endl;
+                        fs << "}"<<endl;
+                        fs.close();
                     }
-                    fs << "</tr>"<<endl;
-                    fs << "</table>"<<endl;
-                    fs << ">];"<<endl;
-                    fs << "}"<<endl;
-                    fs.close();
+
                 }
 
             }
-
         }
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
+
+
 
 }
 
@@ -321,13 +327,11 @@ void repMbr(char _id[],char _namerep[],char _path[],char _dir[]){
             cout << "Error -> No se puede generer reporte porque no se ha encontrado particion con id "<<_id<<endl;
         }else{
             //render .dot
-            for (int i = 0; i < 1; ++i) {
 
-            }
-            string rutajpg = charToString(_path);
+           /* string rutajpg = charToString(_path);
             string render = "dot "+name_dot+" -Tsvg -o "+name_svg;
             cout << "Aviso -> Reporte "<< render <<" Generado exitosamente"<<endl;
-            system(render.c_str());
+            system(render.c_str());*/
         }
 
     }else{

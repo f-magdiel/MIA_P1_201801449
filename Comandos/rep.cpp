@@ -27,57 +27,65 @@ void repJournaling(char _id[],char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
 
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
+
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
+        }
+        //se leer el jorunaling
+        JOURNALING jour;
+        int iniciojour = mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+sizeof(SUPER_BLOQUE)+1;
+        fseek(file,iniciojour,SEEK_SET);
+        fread(&jour,sizeof(JOURNALING),1,file);
+
+        ofstream fs(name_dot);
+        fs << "digraph J {"<<endl;
+        fs << "TableJour ["<<endl;
+        fs << "shape=plaintext"<<endl;
+        fs << "color=forestgreen"<<endl;
+        fs << "label=<"<<endl;
+        fs << "<table border='1' cellborder='1' >"<<endl;
+        fs << "<tr><td>JOURNALING </td></tr>"<<endl;
+        fs << "<tr><td>Journal_tipo_operacion</td><td>"+charToString(jour.jorunal_tipo_operacion)+"</td></tr>"<<endl;
+        fs << "<tr><td>Journal_tipo</td><td> 1 </td></tr>"<<endl;
+        fs << "<tr><td>Journal_nombre</td><td>"+charToString(jour.journal_nombre)+"</td></tr>"<<endl;
+        fs << "<tr><td>Journal_contenido</td><td>"+charToString(jour.journal_contenido)+"</td></tr>"<<endl;
+        char *fecha = ctime(&jour.journal_fecha);
+        string date = charToString(fecha);
+        fs << "<tr><td>Journal_fecha</td><td>"+date+"</td></tr>"<<endl;
+        fs << "<tr><td>Journal_propietario</td><td>root</td></tr>"<<endl;
+        fs << "<tr><td>Journal_Permisos</td><td>777</td></tr>"<<endl;
+        fs << "<tr><td>"+charToString(mbr.mbr_particion[indice].part_name)+"      "+charToString(disco.path)+" </td></tr>"<<endl;
+        fs << "</table>"<<endl;
+        fs << ">];"<<endl;
+        fs << "}"<<endl;
+        fclose(file);
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
-        }
-    }
-    //se leer el jorunaling
-    JOURNALING jour;
-    int iniciojour = mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+sizeof(SUPER_BLOQUE)+1;
-    fseek(file,iniciojour,SEEK_SET);
-    fread(&jour,sizeof(JOURNALING),1,file);
 
-    ofstream fs(name_dot);
-    fs << "digraph J {"<<endl;
-    fs << "TableJour ["<<endl;
-    fs << "shape=plaintext"<<endl;
-    fs << "color=forestgreen"<<endl;
-    fs << "label=<"<<endl;
-    fs << "<table border='1' cellborder='1' >"<<endl;
-    fs << "<tr><td>JOURNALING </td></tr>"<<endl;
-    fs << "<tr><td>Journal_tipo_operacion</td><td>"+charToString(jour.jorunal_tipo_operacion)+"</td></tr>"<<endl;
-    fs << "<tr><td>Journal_tipo</td><td> 1 </td></tr>"<<endl;
-    fs << "<tr><td>Journal_nombre</td><td>"+charToString(jour.journal_nombre)+"</td></tr>"<<endl;
-    fs << "<tr><td>Journal_contenido</td><td>"+charToString(jour.journal_contenido)+"</td></tr>"<<endl;
-    char *fecha = ctime(&jour.journal_fecha);
-    string date = charToString(fecha);
-    fs << "<tr><td>Journal_fecha</td><td>"+date+"</td></tr>"<<endl;
-    fs << "<tr><td>Journal_propietario</td><td>root</td></tr>"<<endl;
-    fs << "<tr><td>Journal_Permisos</td><td>777</td></tr>"<<endl;
-    fs << "<tr><td>"+charToString(mbr.mbr_particion[indice].part_name)+"      "+charToString(disco.path)+" </td></tr>"<<endl;
-    fs << "</table>"<<endl;
-    fs << ">];"<<endl;
-    fs << "}"<<endl;
-    fs.close();
 
 }
 
@@ -85,146 +93,160 @@ void repBitmapBlock(char _id[],char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
 
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
-    }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
         }
-    }
-    //se leer super
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+        //se leer super
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
 
-    //se arma la estructura
-    char numerobloques = auxsuper.s_block_count;
-    char bitbloque[numerobloques];
-    fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
-    fread(&bitbloque,sizeof(char),1,file);
+        //se arma la estructura
+        char numerobloques = auxsuper.s_block_count;
+        char bitbloque[numerobloques];
+        fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
+        fread(&bitbloque,sizeof(char),1,file);
 
-    ofstream fs (name_dot);
-    fs << "digraph H {"<<endl;
-    fs << "TableBitInodo ["<<endl;
-    fs << "shape=plaintext"<<endl;
-    fs << "color=red"<<endl;
-    fs << "label=<"<<endl;
-    fs << "<table border='1' cellborder='0'>"<<endl;
-    int contadorbloque=0;
-    bool flag_salto = true;
-    for (int i = 0; i < numerobloques; ++i) {
-        string bit = bitbloque[i] >'0'?"1":"0";
+        ofstream fs (name_dot);
+        fs << "digraph H {"<<endl;
+        fs << "TableBitInodo ["<<endl;
+        fs << "shape=plaintext"<<endl;
+        fs << "color=red"<<endl;
+        fs << "label=<"<<endl;
+        fs << "<table border='1' cellborder='0'>"<<endl;
+        int contadorbloque=0;
+        bool flag_salto = true;
+        for (int i = 0; i < numerobloques; ++i) {
+            string bit = bitbloque[i] >'0'?"1":"0";
 
-        if(contadorbloque==0){
-            flag_salto = true;
-            fs << "<tr>";
-            fs << "<td> "+bit+" B"+to_string(i+1)+" </td>";
-        }else{
-            fs << "<td> "+bit+" B"+to_string(i+1)+" </td>";
+            if(contadorbloque==0){
+                flag_salto = true;
+                fs << "<tr>";
+                fs << "<td> "+bit+" B"+to_string(i+1)+" </td>";
+            }else{
+                fs << "<td> "+bit+" B"+to_string(i+1)+" </td>";
+            }
+            ++contadorbloque;
+            if(contadorbloque==10){
+                contadorbloque=0;
+                fs << "</tr>"<<endl;
+                flag_salto = false;
+            }
         }
-        ++contadorbloque;
-        if(contadorbloque==10){
-            contadorbloque=0;
+        if(flag_salto){
             fs << "</tr>"<<endl;
-            flag_salto = false;
         }
+        fs << "</table>"<<endl;
+        fs << ">];"<<endl;
+        fs << "}"<<endl;
+        fclose(file);
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
-    if(flag_salto){
-        fs << "</tr>"<<endl;
-    }
-    fs << "</table>"<<endl;
-    fs << ">];"<<endl;
-    fs << "}"<<endl;
-    fs.close();
+
+
 }
 
 void repBitmapInode(char _id[],char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
-
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
-    }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
         }
-    }
-    //se leer super
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+        //se leer super
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
 
-    //se arma la estructura
-    char numeroinodos = auxsuper.s_inode_count;
-    char bitinodos[numeroinodos];
-    fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
-    fread(&bitinodos,sizeof(char),1,file);
+        //se arma la estructura
+        char numeroinodos = auxsuper.s_inode_count;
+        char bitinodos[numeroinodos];
+        fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
+        fread(&bitinodos,sizeof(char),1,file);
 
-    ofstream fs (name_dot);
-    fs << "digraph H {"<<endl;
-    fs << "TableBitInodo ["<<endl;
-    fs << "shape=plaintext"<<endl;
-    fs << "color=blue"<<endl;
-    fs << "label=<"<<endl;
-    fs << "<table border='1' cellborder='0'>"<<endl;
-    int contadorinodo=0;
-    bool flag_salto = true;
-    for (int i = 0; i < numeroinodos; ++i) {
-        string bit = bitinodos[i] >'0'?"1":"0";
+        ofstream fs (name_dot);
+        fs << "digraph H {"<<endl;
+        fs << "TableBitInodo ["<<endl;
+        fs << "shape=plaintext"<<endl;
+        fs << "color=blue"<<endl;
+        fs << "label=<"<<endl;
+        fs << "<table border='1' cellborder='0'>"<<endl;
+        int contadorinodo=0;
+        bool flag_salto = true;
+        for (int i = 0; i < numeroinodos; ++i) {
+            string bit = bitinodos[i] >'0'?"1":"0";
 
-        if(contadorinodo==0){
-            flag_salto=true;
-            fs << "<tr>";
-            fs << "<td> "+bit+" Y"+to_string(i+1)+" </td>";
-        }else{
-            fs << "<td> "+bit+" Y"+to_string(i+1)+" </td>";
+            if(contadorinodo==0){
+                flag_salto=true;
+                fs << "<tr>";
+                fs << "<td> "+bit+" Y"+to_string(i+1)+" </td>";
+            }else{
+                fs << "<td> "+bit+" Y"+to_string(i+1)+" </td>";
+            }
+            ++contadorinodo;
+            if(contadorinodo==10){
+                contadorinodo=0;
+                fs << "</tr>"<<endl;
+                flag_salto=false;
+            }
         }
-        ++contadorinodo;
-        if(contadorinodo==10){
-            contadorinodo=0;
+        if(flag_salto){
             fs << "</tr>"<<endl;
-            flag_salto=false;
         }
+        fs << "</table>"<<endl;
+        fs << ">];"<<endl;
+        fs << "}"<<endl;
+        fclose(file);
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
-    if(flag_salto){
-        fs << "</tr>"<<endl;
-    }
-    fs << "</table>"<<endl;
-    fs << ">];"<<endl;
-    fs << "}"<<endl;
-    fs.close();
+
 
 }
 
@@ -232,73 +254,79 @@ void repSuper(char _id[], char _name[], char _path[],char _dir[]){
     //se lee disco
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
-
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
+
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
+        }
+        //se lee el super bloque
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+        ofstream  fs(name_dot);
+        fs << "digraph {"<<endl;
+        fs << "rankdir=LR;"<<endl;
+        fs <<"Super0 ["<<endl;
+        fs << "shape=plaintext"<<endl;
+        fs << "label=<"<<endl;
+        fs << "<table border='0' cellborder='1' color='goldenrod1' cellspacing='0'>"<<endl;
+        fs << "<tr><td PORT = \"I0\" >SUPERBLOQUE</td></tr>"<<endl;
+        fs << "\t<tr><td cellpadding='4'>"<<endl;
+        fs << "<table color='dodgerblue' cellspacing='0'>"<<endl;
+        fs << "<tr><td>Nombre</td><td>Valor</td></tr>"<<endl;
+        fs << "<tr><td>s_inodes_count</td><td>"+to_string(auxsuper.s_inode_count)+"</td></tr>"<<endl;
+        fs << "<tr><td>s_block_count</td><td>"+to_string(auxsuper.s_block_count)+"</td></tr>"<<endl;
+        fs << "<tr><td>s_free_blocks_count</td><td>"+to_string(auxsuper.s_free_blocks_count)+"</td></tr>"<<endl;
+        fs << "<tr><td>s_free_inodes_count</td><td>"+to_string(auxsuper.s_free_inodes_count)+"</td></tr>"<<endl;
+        char *time1 = ctime(&auxsuper.s_mtime);
+        string t1 = charToString(time1);
+        fs << "<tr><td>s_mtime</td><td>"+t1+"</td></tr>"<<endl;
+        char *time2 = ctime(&auxsuper.s_umtime);
+        string t2 = charToString(time2);
+        fs << "<tr><td>s_umtime</td><td>"+t2+"</td></tr>"<<endl;
+        fs << "<tr><td>s_mnt_count</td><td> "+to_string(auxsuper.s_mnt_count)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_magic</td><td >0xEF53</td></tr>"<<endl;
+        fs << "<tr><td>s_inodes_size</td><td> "+to_string(auxsuper.s_inode_size)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_block_size</td><td> "+to_string(auxsuper.s_block_size)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_first_ino</td><td> "+to_string(auxsuper.s_first_ino)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_first_blo</td><td> "+to_string(auxsuper.s_first_blo)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_bm_inode_start</td><td> "+to_string(auxsuper.s_bm_inode_start)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_bm_block_start</td><td> "+to_string(auxsuper.s_bm_block_start)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_inode_start</td><td> "+to_string(auxsuper.s_inode_start)+" </td></tr>"<<endl;
+        fs << "<tr><td>s_block_start</td><td> "+to_string(auxsuper.s_block_start)+" </td></tr>"<<endl;
+        fs << "</table>"<<endl;
+        fs << "</td>"<<endl;
+        fs << "</tr>"<<endl;
+        fs << "<tr><td> "+charToString(mbr.mbr_particion[indice].part_name)+"     "+charToString(disco.path)+"  </td></tr>"<<endl;
+        fs << "</table>"<<endl;
+        fs << ">];"<<endl;
+        fs << "}"<<endl;
+        fclose(file);
+        fs.close();
+    }else{
+        cout << "Error -> Ya exiset un .dot con ese nombre"<<endl;
     }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
-        }
-    }
-    //se lee el super bloque
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
-    ofstream  fs(name_dot);
-    fs << "digraph {"<<endl;
-    fs << "rankdir=LR;"<<endl;
-    fs <<"Super0 ["<<endl;
-    fs << "shape=plaintext"<<endl;
-    fs << "label=<"<<endl;
-    fs << "<table border='0' cellborder='1' color='goldenrod1' cellspacing='0'>"<<endl;
-    fs << "<tr><td PORT = \"I0\" >SUPERBLOQUE</td></tr>"<<endl;
-    fs << "\t<tr><td cellpadding='4'>"<<endl;
-    fs << "<table color='dodgerblue' cellspacing='0'>"<<endl;
-    fs << "<tr><td>Nombre</td><td>Valor</td></tr>"<<endl;
-    fs << "<tr><td>s_inodes_count</td><td>"+to_string(auxsuper.s_inode_count)+"</td></tr>"<<endl;
-    fs << "<tr><td>s_block_count</td><td>"+to_string(auxsuper.s_block_count)+"</td></tr>"<<endl;
-    fs << "<tr><td>s_free_blocks_count</td><td>"+to_string(auxsuper.s_free_blocks_count)+"</td></tr>"<<endl;
-    fs << "<tr><td>s_free_inodes_count</td><td>"+to_string(auxsuper.s_free_inodes_count)+"</td></tr>"<<endl;
-    char *time1 = ctime(&auxsuper.s_mtime);
-    string t1 = charToString(time1);
-    fs << "<tr><td>s_mtime</td><td>"+t1+"</td></tr>"<<endl;
-    char *time2 = ctime(&auxsuper.s_umtime);
-    string t2 = charToString(time2);
-    fs << "<tr><td>s_umtime</td><td>"+t2+"</td></tr>"<<endl;
-    fs << "<tr><td>s_mnt_count</td><td> "+to_string(auxsuper.s_mnt_count)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_magic</td><td >0xEF53</td></tr>"<<endl;
-    fs << "<tr><td>s_inodes_size</td><td> "+to_string(auxsuper.s_inode_size)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_block_size</td><td> "+to_string(auxsuper.s_block_size)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_first_ino</td><td> "+to_string(auxsuper.s_first_ino)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_first_blo</td><td> "+to_string(auxsuper.s_first_blo)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_bm_inode_start</td><td> "+to_string(auxsuper.s_bm_inode_start)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_bm_block_start</td><td> "+to_string(auxsuper.s_bm_block_start)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_inode_start</td><td> "+to_string(auxsuper.s_inode_start)+" </td></tr>"<<endl;
-    fs << "<tr><td>s_block_start</td><td> "+to_string(auxsuper.s_block_start)+" </td></tr>"<<endl;
-    fs << "</table>"<<endl;
-    fs << "</td>"<<endl;
-    fs << "</tr>"<<endl;
-    fs << "<tr><td> "+charToString(mbr.mbr_particion[indice].part_name)+"     "+charToString(disco.path)+"  </td></tr>"<<endl;
-    fs << "</table>"<<endl;
-    fs << ">];"<<endl;
-    fs << "}"<<endl;
-    fs.close();
 }
 
 string BlockPointer_Tabla(int indice,APUNTADORES *blockpointer,int tree){
@@ -471,55 +499,64 @@ string InodoTabla(int indice,INODOS * inode,int tree){
 void repInodos(char _id[], char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
+
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
+        }
+        //se leer super
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+        int numeroinodos = auxsuper.s_inode_count;
+        int nodoenuso = auxsuper.s_inode_count-auxsuper.s_free_inodes_count;
+        string graficaInodos="";
+        char bitnodos[numeroinodos];
+        fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
+        fread(&bitnodos,sizeof(char),numeroinodos,file);
+        //comenzamos a graficar
+        graficaInodos+="digraph {\n";
+        //iniciar a graficar inodos
+        for (int i = 0; i < numeroinodos; ++i) {
+            if(bitnodos[i]=='1'){
+                INODOS inodolectura;
+                fseek(file,auxsuper.s_inode_start+i*sizeof(INODOS),SEEK_SET);
+                fread(&inodolectura,sizeof(INODOS),1,file);
+                graficaInodos += InodoTabla(i,&inodolectura,0);
+                graficaInodos += "\n\n";
+            }
+        }
+        graficaInodos += "}\n";
+        fclose(file);
+        ofstream fs (name_dot);
+        fs << graficaInodos<<endl;
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
-        }
-    }
-    //se leer super
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
-    int numeroinodos = auxsuper.s_inode_count;
-    int nodoenuso = auxsuper.s_inode_count-auxsuper.s_free_inodes_count;
-    string graficaInodos="";
-    char bitnodos[numeroinodos];
-    fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
-    fread(&bitnodos,sizeof(char),numeroinodos,file);
-    //comenzamos a graficar
-    graficaInodos+="digraph {\n";
-    //iniciar a graficar inodos
-    for (int i = 0; i < numeroinodos; ++i) {
-        if(bitnodos[i]=='1'){
-            INODOS inodolectura;
-            fseek(file,auxsuper.s_inode_start+i*sizeof(INODOS),SEEK_SET);
-            fread(&inodolectura,sizeof(INODOS),1,file);
-            graficaInodos += InodoTabla(i,&inodolectura,0);
-            graficaInodos += "\n\n";
-        }
-    }
-    graficaInodos += "}\n";
-    ofstream fs (name_dot);
-    fs << graficaInodos<<endl;
-    fs.close();
+
 }
 
 //reporte del tree
@@ -527,92 +564,100 @@ void repTree(char _id[], char _name[], char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
 
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
+
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
+        }
+        //se lee el super bloque
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+
+        int num_de_inodos = auxsuper.s_inode_count;
+        int inodo_en_uso = auxsuper.s_inode_count-auxsuper.s_free_inodes_count;
+        string graphInodos="";
+        char bit_nodos[num_de_inodos];
+        fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
+        fread(&bit_nodos,sizeof(char),num_de_inodos,file);
+        //inicia contenidos
+        for (int i = 0; i < num_de_inodos; ++i) {
+            if(bit_nodos[i]=='1'){
+                INODOS inodo_read;
+                fseek(file,auxsuper.s_inode_start+i*sizeof (INODOS),SEEK_SET);
+                fread(&inodo_read,sizeof (INODOS),1,file);
+                graphInodos += InodoTabla(i,&inodo_read,1);
+                graphInodos += "\n\n";
+            }
+        }
+
+        //Siguen los bloques
+        string allbloques;
+        int num_bloques = auxsuper.s_block_count;
+        char bit_bloques[num_bloques];
+        int bloque_en_uso = auxsuper.s_block_count-auxsuper.s_free_blocks_count;
+
+        //se lee
+        fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
+        fread(&bit_bloques,sizeof (char),num_bloques,file);
+
+        //se procede a conectarlos
+        for (int i = 0; i < num_bloques; ++i) {
+            if(bit_bloques[i] == '1'){
+                //para carpetas
+                BLOQUECARPETA readcarpeta;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&readcarpeta,64,1,file);
+                allbloques+= BlockFolder_Tabla(i,&readcarpeta,1);
+            }else if(bit_bloques[i]=='2'){
+                //para archivos
+                BLOQUEARCHIVO readarchivo;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&readarchivo,64,1,file);
+                allbloques+= BlockFile_Tabla(i,&readarchivo,1);
+
+            }else if(bit_bloques[i]=='3'){
+                //para apuntadores
+                APUNTADORES readapuntador;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&readapuntador,64,1,file);
+                allbloques+= BlockPointer_Tabla(i,&readapuntador,1);
+            }
+        }
+
+        //finalizando
+        string arbol = "digraph {\n rankdir=LR;\n"+graphInodos+"\n\n\n"+allbloques+"\n}\n";
+        fclose(file);
+        //generar .dot
+        ofstream  fs(name_dot);
+        fs << arbol<<endl;
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
-        }
-    }
-    //se lee el super bloque
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
 
-    int num_de_inodos = auxsuper.s_inode_count;
-    int inodo_en_uso = auxsuper.s_inode_count-auxsuper.s_free_inodes_count;
-    string graphInodos="";
-    char bit_nodos[num_de_inodos];
-    fseek(file,auxsuper.s_bm_inode_start,SEEK_SET);
-    fread(&bit_nodos,sizeof(char),num_de_inodos,file);
-    //inicia contenidos
-    for (int i = 0; i < num_de_inodos; ++i) {
-        if(bit_nodos[i]=='1'){
-            INODOS inodo_read;
-            fseek(file,auxsuper.s_inode_start+i*sizeof (INODOS),SEEK_SET);
-            fread(&inodo_read,sizeof (INODOS),1,file);
-            graphInodos += InodoTabla(i,&inodo_read,1);
-            graphInodos += "\n\n";
-        }
-    }
-
-    //Siguen los bloques
-    string allbloques;
-    int num_bloques = auxsuper.s_block_count;
-    char bit_bloques[num_bloques];
-    int bloque_en_uso = auxsuper.s_block_count-auxsuper.s_free_blocks_count;
-
-    //se lee
-    fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
-    fread(&bit_bloques,sizeof (char),num_bloques,file);
-    
-    //se procede a conectarlos
-    for (int i = 0; i < num_bloques; ++i) {
-        if(bit_bloques[i] == '1'){
-            //para carpetas
-            BLOQUECARPETA readcarpeta;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&readcarpeta,64,1,file);
-            allbloques+= BlockFolder_Tabla(i,&readcarpeta,1);
-        }else if(bit_bloques[i]=='2'){
-            //para archivos
-            BLOQUEARCHIVO readarchivo;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&readarchivo,64,1,file);
-            allbloques+= BlockFile_Tabla(i,&readarchivo,1);
-
-        }else if(bit_bloques[i]=='3'){
-            //para apuntadores
-            APUNTADORES readapuntador;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&readapuntador,64,1,file);
-            allbloques+= BlockPointer_Tabla(i,&readapuntador,1);
-        }
-    }
-
-    //finalizando
-    string arbol = "digraph {\n rankdir=LR;\n"+graphInodos+"\n\n\n"+allbloques+"\n}\n";
-    fclose(file);
-    //generar .dot
-    ofstream  fs(name_dot);
-    fs << arbol<<endl;
-    fs.close();
 
 }
 
@@ -641,73 +686,81 @@ void repBlock(char _id[], char _name[], char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
 
-    string graphsuper;
-    DISCO disco = buscarDisco(_id);
-    //se lee
-    FILE *file;
-    file = fopen(disco.path,"rb+");
-    MBR mbr;
-    fseek(file,0,SEEK_SET);
-    fread(&mbr,sizeof (MBR),1,file);
-    int indice=0;
-    string nombre_buscar;
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(disco.mbr_particion[i].id,_id)==0){
-            nombre_buscar = charToString(disco.mbr_particion[i].part_name);
-            break;
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        string graphsuper;
+        DISCO disco = buscarDisco(_id);
+        //se lee
+        FILE *file;
+        file = fopen(disco.path,"rb+");
+        MBR mbr;
+        fseek(file,0,SEEK_SET);
+        fread(&mbr,sizeof (MBR),1,file);
+        int indice=0;
+        string nombre_buscar;
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(disco.mbr_particion[i].id,_id)==0){
+                nombre_buscar = charToString(disco.mbr_particion[i].part_name);
+                break;
+            }
         }
+
+        for (int i = 0; i < 4; ++i) {
+            if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
+                indice=i;
+                break;
+            }
+        }
+        //se lee el super bloque
+        SUPER_BLOQUE auxsuper;
+        fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
+        fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
+
+        string todoslosblques="";
+        int numerobloques = auxsuper.s_block_count;
+        char bitbloques[numerobloques];
+        int bloqueenuso = auxsuper.s_block_count-auxsuper.s_free_blocks_count;
+
+        //lectura de bloques
+        fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
+        fread(&bitbloques,sizeof(char),numerobloques,file);
+
+        todoslosblques+="digraph {\n";
+        todoslosblques+="rankdir=LR;\n";
+
+        //buscar bloques
+        for (int i = 0; i < numerobloques; ++i) {
+            if(bitbloques[i]=='1'){//para carpetas
+                BLOQUECARPETA carpetaread;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&carpetaread,64,1,file);
+                todoslosblques+= BlockFolder_Tabla(i,&carpetaread,0);
+
+            }else if(bitbloques[i]=='2'){//para archivos
+                BLOQUEARCHIVO archivoread;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&archivoread,64,1,file);
+                todoslosblques+= BlockFile_Tabla(i,&archivoread,0);
+
+            }else if(bitbloques[i]=='3'){//para apuntadores
+                APUNTADORES pointerread;
+                fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
+                fread(&pointerread,64,1,file);
+                todoslosblques+= BlockPointer_Tabla(i,&pointerread,0);
+
+            }
+        }
+        //finaliznado recorrido
+        todoslosblques+="}\n";
+        fclose(file);
+        ofstream fs(name_dot);
+        fs << todoslosblques<<endl;
+        fs.close();
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
 
-    for (int i = 0; i < 4; ++i) {
-        if(strcmp(mbr.mbr_particion[i].part_name,nombre_buscar.c_str())==0){
-            indice=i;
-            break;
-        }
-    }
-    //se lee el super bloque
-    SUPER_BLOQUE auxsuper;
-    fseek(file,mbr.mbr_particion[indice].part_start+sizeof (mbr.mbr_particion[indice])+1,SEEK_SET);
-    fread(&auxsuper,sizeof (SUPER_BLOQUE),1,file);
 
-    string todoslosblques="";
-    int numerobloques = auxsuper.s_block_count;
-    char bitbloques[numerobloques];
-    int bloqueenuso = auxsuper.s_block_count-auxsuper.s_free_blocks_count;
-
-    //lectura de bloques
-    fseek(file,auxsuper.s_bm_block_start,SEEK_SET);
-    fread(&bitbloques,sizeof(char),numerobloques,file);
-
-    todoslosblques+="digraph {\n";
-    todoslosblques+="rankdir=LR;\n";
-    
-    //buscar bloques
-    for (int i = 0; i < numerobloques; ++i) {
-        if(bitbloques[i]=='1'){//para carpetas
-            BLOQUECARPETA carpetaread;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&carpetaread,64,1,file);
-            todoslosblques+= BlockFolder_Tabla(i,&carpetaread,0);
-
-        }else if(bitbloques[i]=='2'){//para archivos
-            BLOQUEARCHIVO archivoread;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&archivoread,64,1,file);
-            todoslosblques+= BlockFile_Tabla(i,&archivoread,0);
-
-        }else if(bitbloques[i]=='3'){//para apuntadores
-            APUNTADORES pointerread;
-            fseek(file,auxsuper.s_block_start+i*64,SEEK_SET);
-            fread(&pointerread,64,1,file);
-            todoslosblques+= BlockPointer_Tabla(i,&pointerread,0);
-
-        }
-    }
-    //finaliznado recorrido
-    todoslosblques+="}\n";
-    ofstream fs(name_dot);
-    fs << todoslosblques<<endl;
-    fs.close();
 
 }
 

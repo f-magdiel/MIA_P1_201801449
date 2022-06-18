@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="MIA_P1_201801449"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MIA_P1_201801449">
+				<Option output="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/MIA_P1_201801449" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-unknown-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 MIA_P1_201801449"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MIA_P1_201801449/fast">
+				<Option output="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/MIA_P1_201801449" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-unknown-linux-gnu"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-unknown-linux-gnu/11.3.0/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 MIA_P1_201801449/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Analizador/Analizador.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Analizador/Analizador.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Archivo/Archivo.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Archivo/Archivo.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/exec.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/exec.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/fdisk.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/fdisk.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdir.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdir.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdisk.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdisk.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfs.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfs.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mount.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mount.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rep.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rep.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rmdisk.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rmdisk.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/unmount.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/unmount.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/main.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
