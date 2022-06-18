@@ -15,7 +15,6 @@ bool validacionDisco(char path[]){
         fclose(file);
         return true;
     }
-    fclose(file);
     return false;
 
 }

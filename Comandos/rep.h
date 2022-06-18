@@ -18,6 +18,7 @@ void repBitmapBlock(char [],char [],char [],char []);
 void repInodos(char [],char [],char [],char []);
 void repBlock(char [],char [],char [],char []);
 void repJournaling(char [],char [],char [],char []);
+bool validacionDot(string);
 
 string InodoTabla(int indice,INODOS * inode,int tree);
 string BlockFolder_Tabla(int indice,BLOQUECARPETA *blockfolder,int tree);

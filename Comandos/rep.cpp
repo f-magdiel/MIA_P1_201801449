@@ -15,7 +15,14 @@
 #include "../Estructuras/JOURNALING.h"
 
 using namespace std;
-
+bool validacionDot(string _path){
+    FILE *file;
+    if(file = fopen(_path.c_str(),"r")){
+        fclose(file);
+        return true;
+    }
+    return false;
+}
 void repJournaling(char _id[],char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
@@ -902,6 +909,24 @@ void analisisRep(char comando[]){
                     repMbr(valor_id,nombre_rep,valor_path,direc);
                 }else if(flag_disk){
                     repDisk(valor_id,nombre_rep,valor_path,direc);
+                }else if(flag_tree){
+                    //se genera rep del arbol
+                    repTree(valor_id,nombre_rep,valor_path,direc);
+                }else if(flag_sb) {//para superbloque
+                    repSuper(valor_id,nombre_rep,valor_path,direc);
+
+                }else if(flag_bm_inode){//bitmap para inodo
+                    repBitmapInode(valor_id,nombre_rep,valor_path,direc);
+
+                }else if(flag_bm_block){//bitmal para bloques
+                    repBitmapBlock(valor_id,nombre_rep,valor_path,direc);
+                }else if(flag_inode){//reporte de inodos en uso
+                    repInodos(valor_id,nombre_rep,valor_path,direc);
+
+                }else if(flag_block){//para el reporte de bloques
+                    repBlock(valor_id,nombre_rep,valor_path,direc);
+                }else if(flag_journaling){//reporta para genenara journaling
+                    repJournaling(valor_id,nombre_rep,valor_path,direc);
                 }
 
             }

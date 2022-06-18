@@ -14,6 +14,7 @@
 #include "../Estructuras/MBR.h"
 #include "../Estructuras/EBR.h"
 #include "../Comandos/mkdisk.h"
+#include "../Comandos/rep.h"
 using namespace std;
 DISCO disco[99];
 char abdecedario[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
@@ -130,193 +131,211 @@ void repMbr(char _id[],char _namerep[],char _path[],char _dir[]){
     bool flag_rep = false;
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_namerep)+".dot";
+    string name_svg = dir+charToString(_namerep)+".svg";
+    bool existedot = validacionDot(name_dot);
+    if(!existedot){
+        for (int i = 0; i < 99; ++i) {
+            if(disco[i].mbr_tamano!=0){//si existo disco
+                for (int j = 0; j < 4; ++j) {
+                    if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// si está en las 4 basica
+                        //se realiza reporte mbr
+                        flag_rep=true;
+                        char *tt = ctime(&disco[i].mbr_fecha_creacion);
+                        string time = charToString(tt);
+                        ofstream fs(name_dot);
+                        fs << "digraph G {"<<endl;
+                        fs << "rankdir=LR;"<<endl;
+                        fs << "mbr["<<endl;
+                        fs << "shape=plaintext "<<endl;
+                        fs << "label=<"<<endl;
+                        fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
+                        fs << "<tr><td>MBR</td></tr>"<<endl;
+                        fs << "<tr><td cellpadding='4'>"<<endl;
+                        fs << "<table color='orange' cellspacing='0'>"<<endl;
+                        fs << "<tr><td> MBR  </td></tr>"<<endl;
+                        fs << "<tr><td> Mbr_tamaño: "+to_string(disco[i].mbr_tamano)+"</td></tr>"<<endl;
+                        fs << "<tr><td> Mbr_fecha_creacion: "+time+"</td></tr>"<<endl;
+                        fs << "<tr><td> Mbr_signature: "+ to_string(disco[i].mbr_disk_signature)+"</td></tr>"<<endl;
+                        fs << "</table>"<<endl;
+                        fs << "</td>"<<endl;
+                        fs << "</tr>"<<endl;
+                        fs <<"\n"<<endl;
+                        //para los 4 basicos
+                        for (int k = 0; k < 4; ++k) {
+                            if(disco[i].mbr_particion[k].part_size!=0){
+                                string s;
+                                s += disco[i].mbr_particion[k].part_status;
+                                string t;
+                                t += disco[i].mbr_particion[k].part_type;
+                                fs <<"<tr><td cellpadding='4'>"<<endl;
+                                fs <<"<table color='orange' cellspacing='0'>"<<endl;
+                                fs <<" <tr><td> PARTICION  </td></tr>"<<endl;
+                                fs << "<tr><td> Nombre: "+ charToString(disco[i].mbr_particion[k].part_name)+"</td></tr>"<<endl;
+                                fs << "<tr><td> Status: "+s+"</td></tr>"<<endl;
+                                fs << "<tr><td> Tipo: "+t+"</td></tr>"<<endl;
+                                fs << "<tr><td> Fit: "+charToString(disco[i].mbr_particion[k].part_fit)+"</td></tr>"<<endl;
+                                fs << "<tr><td> Start: "+to_string(disco[i].mbr_particion[k].part_start)+"</td></tr>"<<endl;
+                                fs << "<tr><td> Size: "+to_string(disco[i].mbr_particion[k].part_size)+"</td></tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
+                                fs << "</tr>"<<endl;
+                                fs << "\n"<<endl;
+                            }
+                        }
+                        //finaliza para el mbr
+                        fs << "</table>"<<endl;
+                        fs << ">];"<<endl;
 
-    for (int i = 0; i < 99; ++i) {
-        if(disco[i].mbr_tamano!=0){//si existo disco
-            for (int j = 0; j < 4; ++j) {
-                if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// si está en las 4 basica
-                    //se realiza reporte mbr
-                    flag_rep=true;
-                    char *tt = ctime(&disco[i].mbr_fecha_creacion);
-                    string time = charToString(tt);
-                    ofstream fs(name_dot);
-                    fs << "digraph G {"<<endl;
-                    fs << "rankdir=LR;"<<endl;
-                    fs << "mbr["<<endl;
-                    fs << "shape=plaintext "<<endl;
-                    fs << "label=<"<<endl;
-                    fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
-                    fs << "<tr><td>MBR</td></tr>"<<endl;
-                    fs << "<tr><td cellpadding='4'>"<<endl;
-                    fs << "<table color='orange' cellspacing='0'>"<<endl;
-                    fs << "<tr><td> MBR  </td></tr>"<<endl;
-                    fs << "<tr><td> Mbr_tamaño: "+to_string(disco[i].mbr_tamano)+"</td></tr>"<<endl;
-                    fs << "<tr><td> Mbr_fecha_creacion: "+time+"</td></tr>"<<endl;
-                    fs << "<tr><td> Mbr_signature: "+ to_string(disco[i].mbr_disk_signature)+"</td></tr>"<<endl;
-                    fs << "</table>"<<endl;
-                    fs << "</td>"<<endl;
-                    fs << "</tr>"<<endl;
-                    fs <<"\n"<<endl;
-                    //para los 4 basicos
-                    for (int k = 0; k < 4; ++k) {
-                        if(disco[i].mbr_particion[k].part_size!=0){
-                            string s;
-                            s += disco[i].mbr_particion[k].part_status;
-                            string t;
-                            t += disco[i].mbr_particion[k].part_type;
-                            fs <<"<tr><td cellpadding='4'>"<<endl;
-                            fs <<"<table color='orange' cellspacing='0'>"<<endl;
-                            fs <<" <tr><td> PARTICION  </td></tr>"<<endl;
-                            fs << "<tr><td> Nombre: "+ charToString(disco[i].mbr_particion[k].part_name)+"</td></tr>"<<endl;
-                            fs << "<tr><td> Status: "+s+"</td></tr>"<<endl;
-                            fs << "<tr><td> Tipo: "+t+"</td></tr>"<<endl;
-                            fs << "<tr><td> Fit: "+charToString(disco[i].mbr_particion[k].part_fit)+"</td></tr>"<<endl;
-                            fs << "<tr><td> Start: "+to_string(disco[i].mbr_particion[k].part_start)+"</td></tr>"<<endl;
-                            fs << "<tr><td> Size: "+to_string(disco[i].mbr_particion[k].part_size)+"</td></tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
-                            fs << "</tr>"<<endl;
-                            fs << "\n"<<endl;
+                        //buscar las logicas
+                        for (int k = 0; k < 24; ++k) {
+                            if(disco[i].ebr_logicas[k].part_size!=0){
+                                nodos.push_back("ebr"+to_string(k));
+                                fs << "ebr"+to_string(k)+" ["<<endl;
+                                fs << "shape=plaintext"<<endl;
+                                fs << "label=<"<<endl;
+                                fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
+                                fs << "<tr><td>ebr</td></tr>" <<endl;
+                                fs << "<tr><td cellpadding='4'>"<<endl;
+                                fs << "<table color='orange' cellspacing='0'>"<<endl;
+                                fs << "<tr><td> Nombre: "+charToString(disco[i].ebr_logicas[k].part_name)+" </td></tr>"<<endl;
+                                fs << "<tr><td> Fit: "+charToString(disco[i].ebr_logicas[k].part_fit)+" </td></tr>"<<endl;
+                                fs << "<tr><td> Start: "+to_string(disco[i].ebr_logicas[k].part_start)+" </td></tr>"<<endl;
+                                fs << "<tr><td> Size: "+to_string(disco[i].ebr_logicas[k].part_size)+" </td></tr>"<<endl;
+                                fs << "<tr><td> Next: "+to_string(disco[i].ebr_logicas[k].part_next)+" </td></tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
+                                fs << "</tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << ">];\n"<<endl;
+                                fs << "\n"<<endl;
+                            }
                         }
+                        int tam_vec = nodos.size();
+                        if(tam_vec>=1){
+                            //fs << nodos[0] +" -> "+ nodos[1] <<endl;
+                            for (int k = 0; k < tam_vec-1; ++k) {
+                                fs << nodos[k] +" -> "+ nodos[k+1]+"\n"<<endl;
+                            }
+                        }
+                        fs << "}\n"<<endl;
+                        fs.close();
+                        break;
                     }
-                    //finaliza para el mbr
-                    fs << "</table>"<<endl;
-                    fs << ">];"<<endl;
 
-                    //buscar las logicas
-                    for (int k = 0; k < 24; ++k) {
-                        if(disco[i].ebr_logicas[k].part_size!=0){
-                            nodos.push_back("ebr"+to_string(k));
-                            fs << "ebr"+to_string(k)+" ["<<endl;
-                            fs << "shape=plaintext"<<endl;
-                            fs << "label=<"<<endl;
-                            fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
-                            fs << "<tr><td>ebr</td></tr>" <<endl;
-                            fs << "<tr><td cellpadding='4'>"<<endl;
-                            fs << "<table color='orange' cellspacing='0'>"<<endl;
-                            fs << "<tr><td> Nombre: "+charToString(disco[i].ebr_logicas[k].part_name)+" </td></tr>"<<endl;
-                            fs << "<tr><td> Fit: "+charToString(disco[i].ebr_logicas[k].part_fit)+" </td></tr>"<<endl;
-                            fs << "<tr><td> Start: "+to_string(disco[i].ebr_logicas[k].part_start)+" </td></tr>"<<endl;
-                            fs << "<tr><td> Size: "+to_string(disco[i].ebr_logicas[k].part_size)+" </td></tr>"<<endl;
-                            fs << "<tr><td> Next: "+to_string(disco[i].ebr_logicas[k].part_next)+" </td></tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
-                            fs << "</tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << ">];\n"<<endl;
-                            fs << "\n"<<endl;
+                    if(disco[i].mbr_particion[j].part_type=='e'){//si es extendida y nombre no es igual se busca en logicas
+                        for (int k = 0; k < 24; ++k) {
+                            if(strcmp(disco[i].ebr_logicas[k].id,_id)==0){
+                                //se desmonta
+                                flag_rep=true;
+                                ofstream fs(name_dot);
+                                char *tt = ctime(&disco[i].mbr_fecha_creacion);
+                                string time = charToString(tt);
+                                fs << "digraph G {"<<endl;
+                                fs << "rankdir=LR;"<<endl;
+                                fs << "mbr["<<endl;
+                                fs << "shape=plaintext "<<endl;
+                                fs << "label=<"<<endl;
+                                fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
+                                fs << "<tr><td>MBR</td></tr>"<<endl;
+                                fs << "<tr><td cellpadding='4'>"<<endl;
+                                fs << "<table color='orange' cellspacing='0'>"<<endl;
+                                fs << "<tr><td> MBR  </td></tr>"<<endl;
+                                fs << "<tr><td> Mbr_tamaño: "+to_string(disco[i].mbr_tamano)+"</td></tr>"<<endl;
+                                fs << "<tr><td> Mbr_fecha_creacion: "+time+"</td></tr>"<<endl;
+                                fs << "<tr><td> Mbr_signature: "+ to_string(disco[i].mbr_disk_signature)+"</td></tr>"<<endl;
+                                fs << "</table>"<<endl;
+                                fs << "</td>"<<endl;
+                                fs << "</tr>"<<endl;
+                                fs <<"\n"<<endl;
+                                //para los 4 basicos
+                                for (int k = 0; k < 4; ++k) {
+                                    if(disco[i].mbr_particion[k].part_size!=0){
+                                        string s;
+                                        s += disco[i].mbr_particion[k].part_status;
+                                        string t;
+                                        t += disco[i].mbr_particion[k].part_type;
+                                        fs <<"<tr><td cellpadding='4'>"<<endl;
+                                        fs <<"<table color='orange' cellspacing='0'>"<<endl;
+                                        fs <<" <tr><td> PARTICION  </td></tr>"<<endl;
+                                        fs << "<tr><td> Nombre: "+ charToString(disco[i].mbr_particion[k].part_name)+"</td></tr>"<<endl;
+                                        fs << "<tr><td> Status: "+s+"</td></tr>"<<endl;
+                                        fs << "<tr><td> Tipo: "+t+"</td></tr>"<<endl;
+                                        fs << "<tr><td> Fit: "+charToString(disco[i].mbr_particion[k].part_fit)+"</td></tr>"<<endl;
+                                        fs << "<tr><td> Start: "+to_string(disco[i].mbr_particion[k].part_start)+"</td></tr>"<<endl;
+                                        fs << "<tr><td> Size: "+to_string(disco[i].mbr_particion[k].part_size)+"</td></tr>"<<endl;
+                                        fs << "</table>"<<endl;
+                                        fs << "</td>"<<endl;
+                                        fs << "</tr>"<<endl;
+                                        fs << "\n"<<endl;
+                                    }
+                                }
+                                //finaliza para el mbr
+                                fs << "</table>"<<endl;
+                                fs << ">];"<<endl;
+
+                                //buscar las logicas
+                                for (int k = 0; k < 24; ++k) {
+                                    if(disco[i].ebr_logicas[k].part_size!=0){
+                                        nodos.push_back("ebr"+to_string(k));
+                                        fs << "ebr"+to_string(k)+" ["<<endl;
+                                        fs << "shape=plaintext"<<endl;
+                                        fs << "label=<"<<endl;
+                                        fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
+                                        fs << "<tr><td>ebr</td></tr>" <<endl;
+                                        fs << "<tr><td cellpadding='4'>"<<endl;
+                                        fs << "<table color='orange' cellspacing='0'>"<<endl;
+                                        fs << "<tr><td> Nombre: "+charToString(disco[i].ebr_logicas[k].part_name)+" </td></tr>"<<endl;
+                                        fs << "<tr><td> Fit: "+charToString(disco[i].ebr_logicas[k].part_fit)+" </td></tr>"<<endl;
+                                        fs << "<tr><td> Start: "+to_string(disco[i].ebr_logicas[k].part_start)+" </td></tr>"<<endl;
+                                        fs << "<tr><td> Size: "+to_string(disco[i].ebr_logicas[k].part_size)+" </td></tr>"<<endl;
+                                        fs << "<tr><td> Next: "+to_string(disco[i].ebr_logicas[k].part_next)+" </td></tr>"<<endl;
+                                        fs << "</table>"<<endl;
+                                        fs << "</td>"<<endl;
+                                        fs << "</tr>"<<endl;
+                                        fs << "</table>"<<endl;
+                                        fs << ">];\n"<<endl;
+                                        fs << "\n"<<endl;
+                                    }
+                                }
+                                int tam_vec = nodos.size();
+                                if(tam_vec>=1){
+                                    //fs << nodos[0] +" -> "+ nodos[1] <<endl;
+                                    for (int k = 0; k < tam_vec-1; ++k) {
+                                        fs << nodos[k] +" -> "+ nodos[k+1]+"\n"<<endl;
+                                    }
+                                }
+                                fs << "}\n"<<endl;
+                                fs.close();
+
+                                break;
+
+                            }
                         }
                     }
-                    int tam_vec = nodos.size();
-                    if(tam_vec>=1){
-                        //fs << nodos[0] +" -> "+ nodos[1] <<endl;
-                        for (int k = 0; k < tam_vec-1; ++k) {
-                            fs << nodos[k] +" -> "+ nodos[k+1]+"\n"<<endl;
-                        }
-                    }
-                    fs << "}\n"<<endl;
-                    fs.close();
-                    break;
                 }
 
-                if(disco[i].mbr_particion[j].part_type=='e'){//si es extendida y nombre no es igual se busca en logicas
-                    for (int k = 0; k < 24; ++k) {
-                        if(strcmp(disco[i].ebr_logicas[k].id,_id)==0){
-                            //se desmonta
-                           flag_rep=true;
-                            ofstream fs(name_dot);
-                            char *tt = ctime(&disco[i].mbr_fecha_creacion);
-                            string time = charToString(tt);
-                            fs << "digraph G {"<<endl;
-                            fs << "rankdir=LR;"<<endl;
-                            fs << "mbr["<<endl;
-                            fs << "shape=plaintext "<<endl;
-                            fs << "label=<"<<endl;
-                            fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
-                            fs << "<tr><td>MBR</td></tr>"<<endl;
-                            fs << "<tr><td cellpadding='4'>"<<endl;
-                            fs << "<table color='orange' cellspacing='0'>"<<endl;
-                            fs << "<tr><td> MBR  </td></tr>"<<endl;
-                            fs << "<tr><td> Mbr_tamaño: "+to_string(disco[i].mbr_tamano)+"</td></tr>"<<endl;
-                            fs << "<tr><td> Mbr_fecha_creacion: "+time+"</td></tr>"<<endl;
-                            fs << "<tr><td> Mbr_signature: "+ to_string(disco[i].mbr_disk_signature)+"</td></tr>"<<endl;
-                            fs << "</table>"<<endl;
-                            fs << "</td>"<<endl;
-                            fs << "</tr>"<<endl;
-                            fs <<"\n"<<endl;
-                            //para los 4 basicos
-                            for (int k = 0; k < 4; ++k) {
-                                if(disco[i].mbr_particion[k].part_size!=0){
-                                    string s;
-                                    s += disco[i].mbr_particion[k].part_status;
-                                    string t;
-                                    t += disco[i].mbr_particion[k].part_type;
-                                    fs <<"<tr><td cellpadding='4'>"<<endl;
-                                    fs <<"<table color='orange' cellspacing='0'>"<<endl;
-                                    fs <<" <tr><td> PARTICION  </td></tr>"<<endl;
-                                    fs << "<tr><td> Nombre: "+ charToString(disco[i].mbr_particion[k].part_name)+"</td></tr>"<<endl;
-                                    fs << "<tr><td> Status: "+s+"</td></tr>"<<endl;
-                                    fs << "<tr><td> Tipo: "+t+"</td></tr>"<<endl;
-                                    fs << "<tr><td> Fit: "+charToString(disco[i].mbr_particion[k].part_fit)+"</td></tr>"<<endl;
-                                    fs << "<tr><td> Start: "+to_string(disco[i].mbr_particion[k].part_start)+"</td></tr>"<<endl;
-                                    fs << "<tr><td> Size: "+to_string(disco[i].mbr_particion[k].part_size)+"</td></tr>"<<endl;
-                                    fs << "</table>"<<endl;
-                                    fs << "</td>"<<endl;
-                                    fs << "</tr>"<<endl;
-                                    fs << "\n"<<endl;
-                                }
-                            }
-                            //finaliza para el mbr
-                            fs << "</table>"<<endl;
-                            fs << ">];"<<endl;
-
-                            //buscar las logicas
-                            for (int k = 0; k < 24; ++k) {
-                                if(disco[i].ebr_logicas[k].part_size!=0){
-                                    nodos.push_back("ebr"+to_string(k));
-                                    fs << "ebr"+to_string(k)+" ["<<endl;
-                                    fs << "shape=plaintext"<<endl;
-                                    fs << "label=<"<<endl;
-                                    fs << "<table border='0' cellborder='1' color='blue' cellspacing='0'>"<<endl;
-                                    fs << "<tr><td>ebr</td></tr>" <<endl;
-                                    fs << "<tr><td cellpadding='4'>"<<endl;
-                                    fs << "<table color='orange' cellspacing='0'>"<<endl;
-                                    fs << "<tr><td> Nombre: "+charToString(disco[i].ebr_logicas[k].part_name)+" </td></tr>"<<endl;
-                                    fs << "<tr><td> Fit: "+charToString(disco[i].ebr_logicas[k].part_fit)+" </td></tr>"<<endl;
-                                    fs << "<tr><td> Start: "+to_string(disco[i].ebr_logicas[k].part_start)+" </td></tr>"<<endl;
-                                    fs << "<tr><td> Size: "+to_string(disco[i].ebr_logicas[k].part_size)+" </td></tr>"<<endl;
-                                    fs << "<tr><td> Next: "+to_string(disco[i].ebr_logicas[k].part_next)+" </td></tr>"<<endl;
-                                    fs << "</table>"<<endl;
-                                    fs << "</td>"<<endl;
-                                    fs << "</tr>"<<endl;
-                                    fs << "</table>"<<endl;
-                                    fs << ">];\n"<<endl;
-                                    fs << "\n"<<endl;
-                                }
-                            }
-                            int tam_vec = nodos.size();
-                            if(tam_vec>=1){
-                                //fs << nodos[0] +" -> "+ nodos[1] <<endl;
-                                for (int k = 0; k < tam_vec-1; ++k) {
-                                    fs << nodos[k] +" -> "+ nodos[k+1]+"\n"<<endl;
-                                }
-                            }
-                            fs << "}\n"<<endl;
-                            fs.close();
-
-                            break;
-
-                        }
-                    }
-                }
             }
-
         }
+        //para validar error
+        if(flag_rep==false){
+            cout << "Error -> No se puede generer reporte porque no se ha encontrado particion con id "<<_id<<endl;
+        }else{
+            //render .dot
+            for (int i = 0; i < 1; ++i) {
+
+            }
+            string rutajpg = charToString(_path);
+            string render = "dot "+name_dot+" -Tsvg -o "+name_svg;
+            cout << "Aviso -> Reporte "<< render <<" Generado exitosamente"<<endl;
+            system(render.c_str());
+        }
+
+    }else{
+        cout << "Error -> Ya existe un .dot con ese nombre "<<name_dot<<endl;
     }
-    //para validar error
-    if(flag_rep==false){
-        cout << "Error -> No se puede generer reporte porque no se ha encontrado particion con id "<<_id<<endl;
-    }
+
+
+
 }
 
 
