@@ -115,6 +115,12 @@ build CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o: CXX_COMPILER__MIA_P1_
   OBJECT_DIR = CMakeFiles/MIA_P1_201801449.dir
   OBJECT_FILE_DIR = CMakeFiles/MIA_P1_201801449.dir/Comandos
 
+build CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o: CXX_COMPILER__MIA_P1_201801449_Debug /home/magdiel/MIA_P1_201801449/Comandos/mkdir.cpp || cmake_object_order_depends_target_MIA_P1_201801449
+  DEP_FILE = CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o.d
+  FLAGS = -g -std=gnu++14
+  OBJECT_DIR = CMakeFiles/MIA_P1_201801449.dir
+  OBJECT_FILE_DIR = CMakeFiles/MIA_P1_201801449.dir/Comandos
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target MIA_P1_201801449
@@ -123,7 +129,7 @@ build CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o: CXX_COMPILER__MIA_P1_
 #############################################
 # Link the executable MIA_P1_201801449
 
-build MIA_P1_201801449: CXX_EXECUTABLE_LINKER__MIA_P1_201801449_Debug CMakeFiles/MIA_P1_201801449.dir/main.cpp.o CMakeFiles/MIA_P1_201801449.dir/Analizador/Analizador.cpp.o CMakeFiles/MIA_P1_201801449.dir/Archivo/Archivo.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/exec.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/fdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o
+build MIA_P1_201801449: CXX_EXECUTABLE_LINKER__MIA_P1_201801449_Debug CMakeFiles/MIA_P1_201801449.dir/main.cpp.o CMakeFiles/MIA_P1_201801449.dir/Analizador/Analizador.cpp.o CMakeFiles/MIA_P1_201801449.dir/Archivo/Archivo.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/exec.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/fdisk.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/MIA_P1_201801449.dir
   POST_BUILD = :

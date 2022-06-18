@@ -69,10 +69,10 @@ void crearEXT3(DISCO disco,char _id[]){
         super.s_block_size = sizeof(BLOQUECARPETA);
         super.s_first_ino = 2;
         super.s_first_blo = 2;
-        super.s_bm_inode_start = mbr->mbr_particion[indice].part_start+sizeof(SUPER_BLOQUE)+(n*sizeof(JOURNALING));//1
-        super.s_bm_block_start = super.s_bm_inode_start+n;
-        super.s_inode_start = super.s_bm_block_start+(3*n);
-        super.s_block_start = super.s_inode_start+(n*sizeof (INODOS));//1
+        super.s_bm_inode_start = mbr->mbr_particion[indice].part_start+sizeof(SUPER_BLOQUE)+(n*sizeof(JOURNALING))+1;//1
+        super.s_bm_block_start = super.s_bm_inode_start+n+1;
+        super.s_inode_start = super.s_bm_block_start+(3*n)+1;
+        super.s_block_start = super.s_inode_start+(n*sizeof (INODOS))+1;//1
 
         //escribir superbloque
         fseek(file,mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1,SEEK_SET);
@@ -81,7 +81,7 @@ void crearEXT3(DISCO disco,char _id[]){
         //creacion bitmasp de inodos y bloques
         char bit_inodos[n];
         char bit_bloques[3*n];
-        int start_bitinodos = mbr->mbr_particion[indice].part_start+sizeof(SUPER_BLOQUE)+(n*sizeof (JOURNALING));//1
+        int start_bitinodos = mbr->mbr_particion[indice].part_start+sizeof(SUPER_BLOQUE)+(n*sizeof (JOURNALING))+1;//1
         for (int i = 0; i < n; ++i){ bit_inodos[i]='0';}
             bit_inodos[0]='1';//capeta raiz
             //se escribe el bitmap
@@ -97,7 +97,7 @@ void crearEXT3(DISCO disco,char _id[]){
         fwrite(&bit_bloques,sizeof(char),3*n,file);
 
         //escribo el journaling
-        int start_journaling = mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+sizeof(SUPER_BLOQUE);//1
+        int start_journaling = mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+sizeof(SUPER_BLOQUE)+1;//1
         JOURNALING jour;
         jour.jorunal_tipo_operacion[0]='-';
         jour.journal_contenido[0]='-';
@@ -122,7 +122,10 @@ void crearEXT3(DISCO disco,char _id[]){
         time_t fecha_c;
         fecha_c= time(NULL);
         raiz.i_ctime=fecha_c;
+        raiz.i_atime=fecha_c;
+        raiz.i_mtime=fecha_c;
         for (int i = 0; i < 15; ++i) { raiz.i_block[i]=-1;}// se crean los 15 espacios
+        raiz.i_block[0]=0;
         raiz.i_type='0';//es carpeta
         //mas adelante se escribre
 
@@ -131,11 +134,12 @@ void crearEXT3(DISCO disco,char _id[]){
         BLOQUEARCHIVO archivoraiz;
         CONTENT contentraiz;
         //limpio
-        strcpy(contentraiz.b_name,"/");//carpeta actual
-        contentraiz.b_inodo = 0;//apuntador inodo
+        strcpy(contentraiz.b_name,"-");//carpeta actual
+        contentraiz.b_inodo = -1;//apuntador inodo
         carpetaraiz.b_content[0] = contentraiz;//guardamos la carpeta
 
-        //strcpy(contentraiz.b_name,"..");//el padre
+        //strcpy(contentraiz.b_name,"-");//el padre
+        //contentraiz.b_inodo=-1;
         //carpetaraiz.b_content[1]=contentraiz;// se agrega la carpeta padre
 
         //se escribe el inodo y el bloque de la carpeta raiz

@@ -14,6 +14,7 @@ using namespace std;
 #include "../Comandos/unmount.h"
 #include "../Comandos/rep.h"
 #include "../Comandos/mkfs.h"
+#include "../Comandos/mkdir.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -61,7 +62,8 @@ void analizadorGeneral(char comando[]){
         }else if (strcmp(lineacomando,"rm")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"mkdir")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analisisMkdir(comando);
+            memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"cp")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"ls")==0){
