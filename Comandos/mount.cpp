@@ -766,8 +766,8 @@ void montajeMount(char _path[],char _name[]){
                                disco[contador_disco].mbr_particion[i].part_size = mbr->mbr_particion[i].part_size;
                                disco[contador_disco].mbr_particion[i].part_type = mbr->mbr_particion[i].part_type;
                                disco[contador_disco].mbr_particion[i].part_status = mbr->mbr_particion[i].part_status;
-                               strcpy(disco[contador_disco].mbr_particion[cont_Part].part_fit,mbr->mbr_particion[i].part_fit);
-                               strcpy(disco[contador_disco].mbr_particion->part_name,mbr->mbr_particion[i].part_name);
+                               strcpy(disco[contador_disco].mbr_particion[i].part_fit,mbr->mbr_particion[i].part_fit);
+                               strcpy(disco[contador_disco].mbr_particion[i].part_name,mbr->mbr_particion[i].part_name);
                            }
 
                        }
