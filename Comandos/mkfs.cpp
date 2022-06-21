@@ -51,6 +51,7 @@ void crearEXT3(DISCO disco,char _id[]){
         fseek(file,mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1,SEEK_SET);
         for (int i = mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1; i < mbr->mbr_particion[indice].part_size; ++i) {
             fwrite("0",1,1,file);
+            fseek(file,i,SEEK_SET);
         }
 
         //se inicializa super bloque
@@ -83,16 +84,18 @@ void crearEXT3(DISCO disco,char _id[]){
         char bit_bloques[3*n];
         int start_bitinodos = mbr->mbr_particion[indice].part_start+sizeof(SUPER_BLOQUE)+(n*sizeof (JOURNALING))+1;//1
         for (int i = 0; i < n; ++i){ bit_inodos[i]='0';}
-            bit_inodos[0]='1';//capeta raiz
-            //se escribe el bitmap
+            bit_inodos[0]='1';//carpeta raiz
+
+
+            // se escribe el bitmap de inodos
         fseek(file,start_bitinodos,SEEK_SET);
         fwrite(&bit_inodos,sizeof (char),n,file);
 
-        int start_bloques = start_bitinodos+n;
+        int start_bloques = start_bitinodos+n+1;
         for (int i = 0; i < 3*n; ++i) { bit_bloques[i]='0';}
         bit_bloques[0]='1';//para dif carpeta
         bit_bloques[1]='2';//para para dif archivos
-        //se escribe el bitmap
+        //se escribe el bitmap de bloques
         fseek(file,start_bloques,SEEK_SET);
         fwrite(&bit_bloques,sizeof(char),3*n,file);
 
@@ -134,9 +137,12 @@ void crearEXT3(DISCO disco,char _id[]){
         BLOQUEARCHIVO archivoraiz;
         CONTENT contentraiz;
         //limpio
-        strcpy(contentraiz.b_name,"-");//carpeta actual
-        contentraiz.b_inodo = -1;//apuntador inodo
-        carpetaraiz.b_content[0] = contentraiz;//guardamos la carpeta
+        strcpy(contentraiz.b_name,".");//carpeta actual
+        contentraiz.b_inodo = 0;//apuntador al inodo que pertenece
+        carpetaraiz.b_content[0] = contentraiz;//guardamos en la carpeta raiz
+        strcpy(contentraiz.b_name,"..");
+        contentraiz.b_inodo=0;
+        carpetaraiz.b_content[1] = contentraiz;
 
         //strcpy(contentraiz.b_name,"-");//el padre
         //contentraiz.b_inodo=-1;
@@ -156,6 +162,8 @@ void crearEXT3(DISCO disco,char _id[]){
         //escribo bloque archivo
         fseek(file,auxsuper.s_block_start+64,SEEK_SET);
         fwrite(&archivoraiz,64,1,file);
+
+        auxsuper.s_free_blocks_count--;
 
         //rescribo el SUPERBLOQUE
         fseek(file,mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1,SEEK_SET);

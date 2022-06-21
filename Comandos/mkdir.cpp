@@ -81,14 +81,19 @@ int createFolder(FILE *file,SUPER_BLOQUE *super,int *indicepadre,string namecarp
 
             BLOQUECARPETA carpetaroot;
             CONTENT contentraiz;
-            strcpy(contentraiz.b_name,namecarpeta.c_str());
+            strcpy(contentraiz.b_name,".");
             contentraiz.b_inodo = indiceaotorgarinodo;
             carpetaroot.b_content[0] = contentraiz;
-            /*contentraiz.b_inodo = (*indicepadre);
-            strcpy(contentraiz.b_name,namecarpeta.c_str());
-            contentraiz.b_inodo=0;
-            carpetaroot.b_content[1]=contentraiz;*/
+            contentraiz.b_inodo = (*indicepadre);
+            strcpy(contentraiz.b_name,"..");
+            carpetaroot.b_content[1]=contentraiz;
+            memset(&contentraiz.b_name,0,sizeof(contentraiz.b_name));
+            strcpy(contentraiz.b_name,"-");
+            contentraiz.b_inodo = -1;
+            carpetaroot.b_content[2] = contentraiz;
+            carpetaroot.b_content[3] = contentraiz;
 
+            //se escribe el bloque carpeta raiz
             fseek(file,super->s_block_start+indiceaotorgarbloque*64,SEEK_SET);
             fwrite(&carpetaroot,sizeof(BLOQUECARPETA),1,file);
             super->s_free_blocks_count--;
@@ -222,9 +227,9 @@ int BuscarEspacio(INODOS *inode,FILE *file,SUPER_BLOQUE *super,int *indiceactual
             for (int j = 0; j < 4; ++j) {
                 if(carpetalectura.b_content[j].b_inodo==-1){
                     //para crear carpeta raiz
-                    //valorinodo = createFolder(file,super,indiceactualinodo,namecarpeta);
+                    valorinodo = createFolder(file,super,indiceactualinodo,namecarpeta);
                     strcpy(carpetalectura.b_content[j].b_name,namecarpeta.c_str());
-                    carpetalectura.b_content[i].b_inodo = valorinodo;
+                    carpetalectura.b_content[j].b_inodo = valorinodo;
                     fseek(file,super->s_block_start+(inode->i_block[i])*64,SEEK_SET);
                     fwrite(&carpetalectura,sizeof(BLOQUECARPETA),1,file);
                     break;
@@ -259,6 +264,8 @@ int BuscarEspacio(INODOS *inode,FILE *file,SUPER_BLOQUE *super,int *indiceactual
                 //reescribimos el inodo
                 fseek(file,super->s_inode_start+(*indiceactualinodo)*sizeof(INODOS),SEEK_SET);
                 fwrite(inode,sizeof (INODOS),1,file);
+
+            }else{
 
             }
         }
@@ -362,9 +369,8 @@ int searchFolder(INODOS *inodeFolder,FILE *file,SUPER_BLOQUE *super,string namec
                 fread(&carpetab,61,1,file);
                 for (int j = 0; j < 4; ++j) {
                     if(charToString(carpetab.b_content[j].b_name)==namecarpeta){
-
+                        valor = carpetab.b_content[j].b_inodo;
                         return carpetab.b_content[j].b_inodo;
-
                     }
                 }
             }
@@ -524,7 +530,7 @@ void ejecutarMkdir(char _id[],char _directorio[]){
                 cont++;
             }
 
-            //ListaCarpetas.push_back(s);
+            ListaCarpetas.push_back(s);
             if(ListaCarpetas.size()>0){//hay varias carpetas
                 ListaCarpetas.push_back("#");//ultimo item para control
                 int indiceinodo =0;//empezara en la carpeta raiz

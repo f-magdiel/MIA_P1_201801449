@@ -408,7 +408,7 @@ string BlockFolder_Tabla(int indice,BLOQUECARPETA *blockfolder,int tree){
     for(int i=0;i<4;i++){
         indicebloque =  (((int)blockfolder->b_content[i].b_inodo)>0)?"PORT = \"B"+to_string(i)+"\"":"";
         tablefolder += "\t\t\t<tr><td>"+charToString(blockfolder->b_content[i].b_name)+"</td><td "+indicebloque+">"+to_string(blockfolder->b_content[i].b_inodo)+"</td></tr>\n";
-        if(charToString(blockfolder->b_content[i].b_name) =="/"|| charToString(blockfolder->b_content[i].b_name) ==" "){
+        if(charToString(blockfolder->b_content[i].b_name) =="."|| charToString(blockfolder->b_content[i].b_name) ==".."){
 
         }else{
             conexionesainodos += indicebloque != ""?"\nBloque"+to_string(indice)+":"+"B"+to_string(i)+" -> Inodo"+to_string(blockfolder->b_content[i].b_inodo)+":I"+to_string(blockfolder->b_content[i].b_inodo)+";":"";
