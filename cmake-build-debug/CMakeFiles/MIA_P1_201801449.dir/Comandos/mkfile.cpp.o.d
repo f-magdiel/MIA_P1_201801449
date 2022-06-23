@@ -1,5 +1,5 @@
-CMakeFiles/MIA_P1_201801449.dir/Analizador/Analizador.cpp.o: \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/Analizador.cpp \
+CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o: \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfile.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11.3.0/iostream \
  /usr/include/c++/11.3.0/x86_64-unknown-linux-gnu/bits/c++config.h \
  /usr/include/c++/11.3.0/x86_64-unknown-linux-gnu/bits/os_defines.h \
@@ -148,35 +148,27 @@ CMakeFiles/MIA_P1_201801449.dir/Analizador/Analizador.cpp.o: \
  /usr/include/c++/11.3.0/bits/locale_facets.tcc \
  /usr/include/c++/11.3.0/bits/basic_ios.tcc \
  /usr/include/c++/11.3.0/bits/ostream.tcc /usr/include/c++/11.3.0/istream \
- /usr/include/c++/11.3.0/bits/istream.tcc /usr/include/c++/11.3.0/fstream \
- /usr/include/c++/11.3.0/bits/codecvt.h \
- /usr/include/c++/11.3.0/x86_64-unknown-linux-gnu/bits/basic_file.h \
- /usr/include/c++/11.3.0/x86_64-unknown-linux-gnu/bits/c++io.h \
- /usr/include/c++/11.3.0/bits/fstream.tcc /usr/include/c++/11.3.0/cstring \
+ /usr/include/c++/11.3.0/bits/istream.tcc /usr/include/c++/11.3.0/cstring \
  /usr/include/string.h /usr/include/strings.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/exec.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/mkdisk.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/rmdisk.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/fdisk.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/MBR.h \
- /usr/include/c++/11.3.0/ctime \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/EBR.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/mount.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/DISCO.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/unmount.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/rep.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/INODOS.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/BLOQUECARPETA.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/../Estructuras/CONTENT.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/../Estructuras/INODOS.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/BLOQUEARCHIVO.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/APUNTADORES.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/mkfs.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/mkdir.h \
- /usr/include/c++/11.3.0/list /usr/include/c++/11.3.0/bits/stl_list.h \
+ /usr/include/c++/11.3.0/ctime /usr/include/c++/11.3.0/list \
+ /usr/include/c++/11.3.0/bits/stl_list.h \
  /usr/include/c++/11.3.0/bits/allocated_ptr.h \
  /usr/include/c++/11.3.0/ext/aligned_buffer.h \
  /usr/include/c++/11.3.0/bits/list.tcc \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/SUPER_BLOQUE.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/../Estructuras/../Estructuras/BLOQUECARPETA.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Analizador/../Comandos/mkfile.h
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/DISCO.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mount.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/../Estructuras/DISCO.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mkdisk.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/MBR.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/SUPER_BLOQUE.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/../Estructuras/BLOQUECARPETA.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/../Estructuras/../Estructuras/CONTENT.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/../Estructuras/../Estructuras/INODOS.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/JOURNALING.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mkdir.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/../Estructuras/SUPER_BLOQUE.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/../Estructuras/INODOS.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/../Estructuras/APUNTADORES.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/INODOS.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mkfile.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/BLOQUEARCHIVO.h

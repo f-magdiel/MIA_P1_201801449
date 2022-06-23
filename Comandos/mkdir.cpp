@@ -319,7 +319,7 @@ int searchPointerD(APUNTADORES *apuntadordoble,FILE *file,SUPER_BLOQUE *super,in
     if(index!=-1){
         APUNTADORES pointersimple;
         fseek(file,super->s_block_start+index*64,SEEK_SET);
-        fread(&pointersimple,61,1,file);
+        fread(&pointersimple,64,1,file);
         valor = searchPointerS(&pointersimple,file,super,&indicesimple,namecarpeta);
     }
     if(valor!=-1){
@@ -366,7 +366,7 @@ int searchFolder(INODOS *inodeFolder,FILE *file,SUPER_BLOQUE *super,string namec
             if(inodeFolder->i_block[i]!=-1){
                 BLOQUECARPETA carpetab;
                 fseek(file,super->s_block_start+(inodeFolder->i_block[i])*64,SEEK_SET);
-                fread(&carpetab,61,1,file);
+                fread(&carpetab,64,1,file);
                 for (int j = 0; j < 4; ++j) {
                     if(charToString(carpetab.b_content[j].b_name)==namecarpeta){
                         valor = carpetab.b_content[j].b_inodo;

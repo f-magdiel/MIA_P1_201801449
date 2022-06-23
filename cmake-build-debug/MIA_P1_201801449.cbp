@@ -118,6 +118,9 @@
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdisk.h">
 			<Option target="MIA_P1_201801449"/>
 		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfile.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfs.cpp">
 			<Option target="MIA_P1_201801449"/>
 		</Unit>

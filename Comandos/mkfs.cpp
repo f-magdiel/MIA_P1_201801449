@@ -94,7 +94,7 @@ void crearEXT3(DISCO disco,char _id[]){
         int start_bloques = start_bitinodos+n+1;
         for (int i = 0; i < 3*n; ++i) { bit_bloques[i]='0';}
         bit_bloques[0]='1';//para dif carpeta
-        bit_bloques[1]='2';//para para dif archivos
+        //bit_bloques[1]='2';//para para dif archivos
         //se escribe el bitmap de bloques
         fseek(file,start_bloques,SEEK_SET);
         fwrite(&bit_bloques,sizeof(char),3*n,file);
@@ -134,7 +134,7 @@ void crearEXT3(DISCO disco,char _id[]){
 
         //bloque carpeta raiz
         BLOQUECARPETA carpetaraiz;
-        BLOQUEARCHIVO archivoraiz;
+        //BLOQUEARCHIVO archivoraiz;
         CONTENT contentraiz;
         //limpio
         strcpy(contentraiz.b_name,".");//carpeta actual
@@ -160,10 +160,9 @@ void crearEXT3(DISCO disco,char _id[]){
         auxsuper.s_free_blocks_count--;//se disminuye
 
         //escribo bloque archivo
-        fseek(file,auxsuper.s_block_start+64,SEEK_SET);
-        fwrite(&archivoraiz,64,1,file);
-
-        auxsuper.s_free_blocks_count--;
+        //fseek(file,auxsuper.s_block_start+64,SEEK_SET);
+        //fwrite(&archivoraiz,64,1,file);
+        //auxsuper.s_free_blocks_count--;
 
         //rescribo el SUPERBLOQUE
         fseek(file,mbr->mbr_particion[indice].part_start+sizeof (mbr->mbr_particion[indice])+1,SEEK_SET);

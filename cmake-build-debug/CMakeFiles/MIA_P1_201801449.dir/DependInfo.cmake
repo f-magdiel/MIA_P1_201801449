@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/fdisk.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/fdisk.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/fdisk.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdir.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdisk.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o.d"
+  "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfile.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfs.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mount.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rep.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o.d"

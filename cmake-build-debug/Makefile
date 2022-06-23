@@ -273,6 +273,30 @@ Comandos/mkdisk.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.s
 .PHONY : Comandos/mkdisk.cpp.s
 
+Comandos/mkfile.o: Comandos/mkfile.cpp.o
+.PHONY : Comandos/mkfile.o
+
+# target to build an object file
+Comandos/mkfile.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o
+.PHONY : Comandos/mkfile.cpp.o
+
+Comandos/mkfile.i: Comandos/mkfile.cpp.i
+.PHONY : Comandos/mkfile.i
+
+# target to preprocess a source file
+Comandos/mkfile.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.i
+.PHONY : Comandos/mkfile.cpp.i
+
+Comandos/mkfile.s: Comandos/mkfile.cpp.s
+.PHONY : Comandos/mkfile.s
+
+# target to generate assembly for a file
+Comandos/mkfile.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.s
+.PHONY : Comandos/mkfile.cpp.s
+
 Comandos/mkfs.o: Comandos/mkfs.cpp.o
 .PHONY : Comandos/mkfs.o
 
@@ -444,6 +468,9 @@ help:
 	@echo "... Comandos/mkdisk.o"
 	@echo "... Comandos/mkdisk.i"
 	@echo "... Comandos/mkdisk.s"
+	@echo "... Comandos/mkfile.o"
+	@echo "... Comandos/mkfile.i"
+	@echo "... Comandos/mkfile.s"
 	@echo "... Comandos/mkfs.o"
 	@echo "... Comandos/mkfs.i"
 	@echo "... Comandos/mkfs.s"

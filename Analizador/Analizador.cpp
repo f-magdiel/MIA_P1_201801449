@@ -15,6 +15,7 @@ using namespace std;
 #include "../Comandos/rep.h"
 #include "../Comandos/mkfs.h"
 #include "../Comandos/mkdir.h"
+#include "../Comandos/mkfile.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -58,7 +59,8 @@ void analizadorGeneral(char comando[]){
             analisisMkfs(comando);
             memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"mkfile")==0){
-            cout << "Encontro: "<< lineacomando<<endl;
+            analisisMkfile(comando);
+            memset(lineacomando,0,100);
         }else if (strcmp(lineacomando,"rm")==0){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"mkdir")==0){

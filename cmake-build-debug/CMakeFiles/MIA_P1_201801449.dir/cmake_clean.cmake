@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdir.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkdisk.cpp.o.d"
+  "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o"
+  "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfile.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mkfs.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o"
