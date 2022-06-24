@@ -22,6 +22,67 @@ int contador_abc=0;
 int contador_disco=0;
 vector <string> nodos;
 
+//para raid
+
+int comprobarEspacios(string path){
+    int retorno=0;
+    for(int i=0;i<(int)path.length();i++){
+        if(path[i]!=' '){
+            retorno=0;
+        }else{
+            retorno=1;
+            break;
+        }
+    }
+    return retorno;
+}
+string soloNombre(string ruta){
+    string s = ruta;
+    string delimitador = "/";
+    size_t pos = 0;
+    string token;
+    while((pos = s.find(delimitador)) != std::string::npos){
+        token = s.substr(0,pos);
+        s.erase(0,pos+delimitador.length());
+    }
+    return s;
+}
+string soloDirectorio(string ruta){
+    string s = ruta;
+    string delimitador = "/";
+    string retorno = "";
+    string token="";
+    int cont=0;
+    size_t pos = 0;
+    while((pos = s.find(delimitador))!=std::string::npos){
+        token = s.substr(0,pos);
+        if(cont==0){
+            int tipo = comprobarEspacios(token);
+            if(tipo==1){
+                retorno+="'"+token+"'";
+            }else{
+                retorno+=token;
+            }
+        }else{
+            int tipo = comprobarEspacios(token);
+            if(tipo==1){
+                retorno+="/"+token+"/";
+            }else{
+                retorno+="/"+token;
+            }
+        }
+        cont++;
+        s.erase(0,pos+delimitador.length());
+    }
+    return retorno;
+}
+string crearPathCopia(char path[]){
+    string dir = soloDirectorio(charToString(path));
+    string name = soloNombre(charToString(path));
+    string nombrecopia = dir+"/Copia_"+name;
+    return nombrecopia;
+}
+
 //para mkfs
 DISCO buscarDisco(char _id[]){
     DISCO nulo;
@@ -351,11 +412,11 @@ void desmontarMount(char _id[]){
             for (int j = 0; j < 4; ++j) {
                 if(strcmp(disco[i].mbr_particion[j].id,_id)==0){// si está en las 4 basica
                     //se desmonta
-                    disco[i].mbr_particion[j].part_type = '\000';
+                    /*disco[i].mbr_particion[j].part_type = '\000';
                     disco[i].mbr_particion[j].part_size = 0;
                     disco[i].mbr_particion[j].part_start = 0;
                     memset(disco[i].mbr_particion[j].part_fit,0,3);
-                    memset(disco[i].mbr_particion[j].part_name,0,16);
+                    memset(disco[i].mbr_particion[j].part_name,0,16);*/
                     memset(disco[i].mbr_particion[j].id,0,10);
                     cout << "Aviso -> Se ha desmontado particion con id "<<_id<<endl;
                     flag_unmount=true;
@@ -366,11 +427,11 @@ void desmontarMount(char _id[]){
                     for (int k = 0; k < 24; ++k) {
                         if(strcmp(disco[i].ebr_logicas[k].id,_id)==0){
                             //se desmonta
-                            disco[i].ebr_logicas[k].part_size  = 0;
+                            /*disco[i].ebr_logicas[k].part_size  = 0;
                             disco[i].ebr_logicas[k].part_next = 0;
                             disco[i].ebr_logicas[k].part_start = 0;
                             memset(disco[i].ebr_logicas[k].part_fit,0,3);
-                            memset(disco[i].ebr_logicas[k].part_name,0,16);
+                            memset(disco[i].ebr_logicas[k].part_name,0,16);*/
                             memset(disco[i].ebr_logicas[k].id,0,10);
                             cout << "Aviso -> Se ha desmontado particion con id "<<_id<<endl;
                             flag_unmount=true;
@@ -486,7 +547,7 @@ bool validacionPathMount(char path[]){
         fclose(file);
         return true;
     }
-    fclose(file);
+
     return false;
 }
 
@@ -545,8 +606,14 @@ void montajeMount(char _path[],char _name[]){
 
     //para validar path
     int cont_disk=0;
+    string ruta = charToString(_path);
+    string cop = "Copia_";
+    size_t found = ruta.find(cop);
+    if (found != string::npos){
+        ruta.erase(found,6);
+    }
     for (cont_disk = 0; cont_disk < 99; ++cont_disk) {
-        if(strcmp(disco[cont_disk].path,_path)==0){
+        if(strcmp(disco[cont_disk].path,ruta.c_str())==0){
             existe_disk = true;
             break;
         }
@@ -702,12 +769,21 @@ void montajeMount(char _path[],char _name[]){
         }else{//disco es nuevo, primera vez que se ingresa en el array
 
            if(tipoParticion=='p'){
+
                //se copia el disco
                disco[contador_disco].letra = abdecedario[contador_abc];
                disco[contador_disco].mbr_disk_signature = mbr->mbr_disk_signature;
                disco[contador_disco].mbr_tamano = mbr->mbr_tamano;
                disco[contador_disco].mbr_fecha_creacion  = mbr->mbr_fecha_creacion;
-               strcpy(disco[contador_disco].path,_path);
+               //para ver si es copia
+               string ruta = charToString(_path);
+               string cop = "Copia_";
+               size_t found = ruta.find(cop);
+               if (found != string::npos){
+                   ruta.erase(found,6);
+               }
+               strcpy(disco[contador_disco].path,ruta.c_str());
+
 
                //se copian las particion basicas
                for (int i = 0; i < 4; ++i) {
@@ -780,6 +856,7 @@ void montajeMount(char _path[],char _name[]){
            }else if(tipoParticion=='e'){
                char letra = disco[cont_disk].letra;
                //se copia
+
                disco[contador_disco].mbr_particion[cont_Part].part_status = mbr->mbr_particion[cont_Part].part_status;
                disco[contador_disco].mbr_particion[cont_Part].part_type = mbr->mbr_particion[cont_Part].part_type;
                disco[contador_disco].mbr_particion[cont_Part].part_size = mbr->mbr_particion[cont_Part].part_size;
@@ -827,7 +904,16 @@ void montajeMount(char _path[],char _name[]){
                disco[contador_disco].mbr_disk_signature = mbr->mbr_disk_signature;
                disco[contador_disco].mbr_tamano = mbr->mbr_tamano;
                disco[contador_disco].mbr_fecha_creacion  = mbr->mbr_fecha_creacion;
+               //para ver si es copia
+               string ruta = charToString(_path);
+               string cop = "Copia_";
+               size_t found = ruta.find(cop);
+               if (found != string::npos){
+                   ruta.erase(found,6);
+               }
+               strcpy(disco[contador_disco].path,ruta.c_str());
                strcpy(disco[contador_disco].path,_path);
+
 
                //las particiones primarias basica
                //se copian las particion basicas
@@ -1058,9 +1144,18 @@ void analisisMount(char comando[]){
 
 
     if(flag_name && flag_path){//es para montar
+        //aplica raid
         bool flag_disk = validacionPathMount(valor_path);
-        if(flag_disk){//existe disco
+        string nuevo = crearPathCopia(valor_path);
+        char nuevopath[100]="";
+        strcpy(nuevopath,nuevo.c_str());
+        bool disk_cp = validacionPathMount(nuevopath);
+        if(flag_disk && disk_cp){//existe disco
+            //disco original
             montajeMount(valor_path,valor_name);
+        }else if(disk_cp){//solo copia existe
+            //disco copia
+            montajeMount(nuevopath,valor_name);
         }else{
             cout << "Error -> No existe el disco que se intenta montar "<<valor_path<<endl;
         }

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <ctime>
 #include <string>
+
+using namespace std;
 //funciones
 void analisisMount(char[]);
 bool validacionPathMount(char []);
@@ -14,6 +16,11 @@ void showMount();
 void desmontarMount(char []);
 void repMbr(char [],char [],char[],char[]);
 void repDisk(char [],char [],char [],char []);
+string crearPathCopia(char[]);
+string soloDirectorio(string);
+string soloNombre(string);
+int comprobarEspacios(string);
+void paraRaidPath(char []);
 
 //para el mkfs
 DISCO buscarDisco(char []);

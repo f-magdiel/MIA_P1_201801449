@@ -2171,7 +2171,10 @@ CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o: ../Comandos/rmdisk.cpp \
   /usr/include/x86_64-linux-gnu/bits/local_lim.h \
   /usr/include/linux/limits.h \
   /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
-  ../Comandos/mkdisk.h
+  ../Comandos/mkdisk.h \
+  ../Estructuras/DISCO.h \
+  ../Comandos/mount.h \
+  ../Estructuras/DISCO.h
 
 CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o: ../Comandos/unmount.cpp \
   /usr/include/stdc-predef.h \

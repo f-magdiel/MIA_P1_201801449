@@ -2183,6 +2183,9 @@ CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o
  /usr/include/linux/limits.h
  /usr/include/x86_64-linux-gnu/bits/dirent_ext.h
  /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkdisk.h
+ /home/magdiel/Escritorio/MIA_P1_201801449/Estructuras/DISCO.h
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mount.h
+ /home/magdiel/Escritorio/MIA_P1_201801449/Estructuras/DISCO.h
 
 CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o
  /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/unmount.cpp

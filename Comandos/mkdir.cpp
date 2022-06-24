@@ -464,8 +464,8 @@ bool createRecursivo(FILE*file,SUPER_BLOQUE* super,list<string>*Lista,int *indic
     }
 }
 
-void ejecutarMkdir(char _id[],char _directorio[]){
-    DISCO disco = buscarDisco(_id);
+void ejecutarMkdir(DISCO disco,char _id[],char _directorio[],char _path[]){
+    //DISCO disco = buscarDisco(_id);
     //se busca por id para obtener nombre
     if(disco.mbr_tamano!=0){// si existe
         string nombre_buscar;
@@ -477,7 +477,7 @@ void ejecutarMkdir(char _id[],char _directorio[]){
         }
 
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(_path,"rb+");
         MBR *mbr = (MBR*) malloc(sizeof (MBR));
         fseek(file,0,SEEK_SET);
         fread(mbr,sizeof (MBR),1,file);
@@ -641,11 +641,46 @@ void analisisMkdir(char comando[]){
     if(flag_p){
         cout << "Aviso -> Ya existe la raiz"<<endl;
         P = true;
-        ejecutarMkdir(valor_id,valor_path);
+        //para raid
+        DISCO disco = buscarDisco(valor_id);
+        bool disk_or = validacionPathMount(disco.path);
+        string nuevo = crearPathCopia(disco.path);
+        char nuevopath[100]="";
+        strcpy(nuevopath,nuevo.c_str());
+        bool disk_cp = validacionPathMount(nuevopath);
+        if(disk_or && disk_cp){
+            //disco original
+            ejecutarMkdir(disco,valor_id,valor_path,disco.path);
+            //disco copia
+            ejecutarMkdir(disco,valor_id,valor_path,nuevopath);
+        }else if(disk_cp){
+            //disco copia
+            ejecutarMkdir(disco,valor_id,valor_path,nuevopath);
+        }else{
+            cout << "Error -> Disco no existe para montar"<<endl;
+        }
+
     }else{
 
         cout << "Aviso -> Se procede a crear carpetas..."<<endl;
-        ejecutarMkdir(valor_id,valor_path);
+        //para raid
+        DISCO disco = buscarDisco(valor_id);
+        bool disk_or = validacionPathMount(disco.path);
+        string nuevo = crearPathCopia(disco.path);
+        char nuevopath[100]="";
+        strcpy(nuevopath,nuevo.c_str());
+        bool disk_cp = validacionPathMount(nuevopath);
+        if(disk_or && disk_cp){
+            //disco original
+            ejecutarMkdir(disco,valor_id,valor_path,disco.path);
+            //disco copia
+            ejecutarMkdir(disco,valor_id,valor_path,nuevopath);
+        }else if(disk_cp){
+            //disco copia
+            ejecutarMkdir(disco,valor_id,valor_path,nuevopath);
+        }else{
+            cout << "Error -> Disco no existe para montar"<<endl;
+        }
 
     };
 

@@ -1208,22 +1208,50 @@ void analsisFdisk(char comando[]){
 
     //validacion para crear particiones
     if(flag_add){//si es add
-        //disco original
-        addParticion(valor_add,valor_unit,valor_path,valor_name);
-        //disco espejo
-        string pathcopia = cambioPathCopia(valor_path);
-        char nuevoPath [100]="";
-        strcpy(nuevoPath,pathcopia.c_str());
-        addParticion(valor_add,valor_unit,nuevoPath,valor_name);
+        /*para raid, si existe el disco principal se escribe en ello
+        sino se escribe en la copia*/
+        bool raid_disk_or = validacionDisco(valor_path);
+        string path_cp = cambioPathCopia(valor_path);
+        char path_copy[100]="";
+        strcpy(path_copy,path_cp.c_str());
+        bool raid_disk_cp =validacionDisco(path_copy);
+        if(raid_disk_or && raid_disk_cp){//existe disco original
+            //disco original
+            addParticion(valor_add,valor_unit,valor_path,valor_name);
+            //disco espejo
+            string pathcopia = cambioPathCopia(valor_path);
+            char nuevoPath [100]="";
+            strcpy(nuevoPath,pathcopia.c_str());
+            addParticion(valor_add,valor_unit,nuevoPath,valor_name);
+
+        }else if(raid_disk_cp){//se usa la copia
+            addParticion(valor_add,valor_unit,path_copy,valor_name);
+        }else{
+            cout << "Error -> El disco no existe para aplicar add"<<endl;
+        }
 
     }else if(flag_delete){//si es delete
-        //disco origonal
-        deleteParticion(valor_name,valor_path,valor_delete);
-        //disco espejo
-        string pathcopia = cambioPathCopia(valor_path);
-        char nuevoPath [100]="";
-        strcpy(nuevoPath,pathcopia.c_str());
-        deleteParticion(valor_name,nuevoPath,valor_delete);
+        /*para raid, si existe el disco principal se escribe en ello
+        sino se escribe en la copia*/
+        bool raid_disk_or = validacionDisco(valor_path);
+        string path_cp = cambioPathCopia(valor_path);
+        char path_copy[100]="";
+        strcpy(path_copy,path_cp.c_str());
+        bool raid_disk_cp =validacionDisco(path_copy);
+        if(raid_disk_or && raid_disk_cp){
+            //disco origonal
+            deleteParticion(valor_name,valor_path,valor_delete);
+            //disco espejo
+            string pathcopia = cambioPathCopia(valor_path);
+            char nuevoPath [100]="";
+            strcpy(nuevoPath,pathcopia.c_str());
+            deleteParticion(valor_name,nuevoPath,valor_delete);
+        }else if(raid_disk_cp){
+            deleteParticion(valor_name,path_copy,valor_delete);
+        }else{
+            cout << "Error -> El disco no existe para aplicar delete"<<endl;
+        }
+
 
     }else if(flag_mov){//si es mov
         cout << "Error -> Se está intentando moviendo particion"<<endl;
@@ -1231,13 +1259,17 @@ void analsisFdisk(char comando[]){
         bool flag_size = validacionSizeParticion(valor_size);
         bool flag_path = validacionDisco(valor_path);
         bool flags_fit = validacionFit(valor_fit);
+        string path_cp = cambioPathCopia(valor_path);
+        char path_copy[100]="";
+        strcpy(path_copy,path_cp.c_str());
+        bool raid_disk_cp =validacionDisco(path_copy);
 
         if(flag_size){//es positivo y mayor a cero
             if(valor_unit=='b'||valor_unit=='k'||valor_unit=='m'){// la letra de unit es correcta
                 if(valor_type=='p'||valor_type=='l'||valor_type=='e'){// el tipo de particion
 
                     if(flags_fit){
-                        if (flag_path) {
+                        if (flag_path && raid_disk_cp) {
                             //al disco original
                             crearParticion(valor_size, valor_unit, valor_path, valor_type, valor_fit, valor_name);
                             //disco espejo
@@ -1245,6 +1277,8 @@ void analsisFdisk(char comando[]){
                             char nuevoPath [100]="";
                             strcpy(nuevoPath,pathcopia.c_str());
                             crearParticion(valor_size,valor_unit,nuevoPath,valor_type,valor_fit,valor_name);
+                        }else if(raid_disk_cp){
+                            crearParticion(valor_size,valor_unit,path_copy,valor_type,valor_fit,valor_name);
                         }else {
                             cout << "Error -> El disco no existe para realizar la particion" << endl;
                         }

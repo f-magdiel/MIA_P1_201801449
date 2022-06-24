@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include "../Estructuras/SUPER_BLOQUE.h"
+#include "../Estructuras/DISCO.h"
 
 using namespace std;
 static list<string>ListaCarpetasm;
@@ -20,7 +21,7 @@ string filename2(string ruta);
 
 
 void analisisMkfile(char []);
-void ejecutarMkfile(char [],char []);
+void ejecutarMkfile(DISCO *disco,char [],char [],char []);
 string filePath(string);
 int comprobarEspacio(string);
 bool createRecursivom(FILE *file,SUPER_BLOQUE *auxsuper,list<string>*Lista,int *indiceactualdeinodo);

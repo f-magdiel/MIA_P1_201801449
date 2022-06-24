@@ -156,4 +156,7 @@ CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
- /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mkdisk.h
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mkdisk.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Estructuras/DISCO.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/mount.h \
+ /home/magdiel/Escritorio/MIA_P1_201801449/Comandos/../Comandos/../Estructuras/DISCO.h

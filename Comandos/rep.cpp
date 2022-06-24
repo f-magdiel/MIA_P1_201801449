@@ -28,9 +28,23 @@ void repJournaling(char _id[],char _name[],char _path[],char _dir[]){
     string name_dot = dir+charToString(_name)+".dot";
 
     bool existedot = validacionDot(name_dot);
+    //para raid
+    DISCO disco = buscarDisco(_id);
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
+
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
         file = fopen(disco.path,"rb+");
@@ -94,12 +108,25 @@ void repBitmapBlock(char _id[],char _name[],char _path[],char _dir[]){
     string name_dot = dir+charToString(_name)+".dot";
 
     bool existedot = validacionDot(name_dot);
+    DISCO disco = buscarDisco(_id);
+    //para raid
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(pathnew,"rb+");
         MBR mbr;
         fseek(file,0,SEEK_SET);
         fread(&mbr,sizeof (MBR),1,file);
@@ -174,12 +201,26 @@ void repBitmapInode(char _id[],char _name[],char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
     bool existedot = validacionDot(name_dot);
+    DISCO disco = buscarDisco(_id);
+    //para raid
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
+
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(pathnew,"rb+");
         MBR mbr;
         fseek(file,0,SEEK_SET);
         fread(&mbr,sizeof (MBR),1,file);
@@ -255,12 +296,26 @@ void repSuper(char _id[], char _name[], char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
     bool existedot = validacionDot(name_dot);
+    DISCO disco = buscarDisco(_id);
+    //para raid
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
+
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(pathnew,"rb+");
         MBR mbr;
         fseek(file,0,SEEK_SET);
         fread(&mbr,sizeof (MBR),1,file);
@@ -501,9 +556,23 @@ void repInodos(char _id[], char _name[],char _path[],char _dir[]){
     string name_dot = dir+charToString(_name)+".dot";
 
     bool existedot = validacionDot(name_dot);
+    DISCO disco = buscarDisco(_id);
+    //para raid
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
+
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
         file = fopen(disco.path,"rb+");
@@ -565,13 +634,24 @@ void repTree(char _id[], char _name[], char _path[],char _dir[]){
     string name_dot = dir+charToString(_name)+".dot";
 
     bool existedot = validacionDot(name_dot);
-
+    DISCO disco = buscarDisco(_id);
+    char pathdisk[100]="";
+    bool disK_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    strcpy(pathdisk,nuevo.c_str());
+    bool disK_cp = validacionPathMount(pathdisk);
+    char pathnew[100]="";
+    if(disK_or){
+        strcpy(pathnew,disco.path);
+    }else if(disK_cp){
+        strcpy(pathnew,pathdisk);
+    }
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(pathnew,"rb+");
         MBR mbr;
         fseek(file,0,SEEK_SET);
         fread(&mbr,sizeof (MBR),1,file);
@@ -678,7 +758,7 @@ bool validacionDirectorioReporte(char _direc[]){
         closedir(directorio);
         return true;
     }else{
-        closedir(directorio);
+        /*closedir(directorio);*/
         return false;
     }
 }
@@ -687,9 +767,22 @@ void repBlock(char _id[], char _name[], char _path[],char _dir[]){
     string name_dot = dir+charToString(_name)+".dot";
 
     bool existedot = validacionDot(name_dot);
+    DISCO disco = buscarDisco(_id);
+    bool disk_or = validacionPathMount(disco.path);
+    string nuevo = crearPathCopia(disco.path);
+    char nuevopath[100]="";
+    strcpy(nuevopath,nuevo.c_str());
+    bool disk_cp = validacionPathMount(nuevopath);
+    char pathnew[100]="";
+    if(disk_or){
+        strcpy(pathnew,disco.path);
+    }else if(disk_cp){
+        strcpy(pathnew,nuevopath);
+    }
+
     if(!existedot){
         string graphsuper;
-        DISCO disco = buscarDisco(_id);
+
         //se lee
         FILE *file;
         file = fopen(disco.path,"rb+");

@@ -280,8 +280,8 @@ string filePath(string ruta){
     return retorno;
 }
 
-void ejecutarMkfile(char _id[],char _directorio[]){
-    DISCO disco = buscarDisco(_id);
+void ejecutarMkfile(DISCO disco,char _id[],char _directorio[],char _path[]){
+    //DISCO disco = buscarDisco(_id);
 
     if(disco.mbr_tamano!=0){
         string nombre_buscar;
@@ -292,7 +292,7 @@ void ejecutarMkfile(char _id[],char _directorio[]){
             }
         }
         FILE *file;
-        file = fopen(disco.path,"rb+");
+        file = fopen(_path,"rb+");
         MBR *mbr = (MBR*) malloc(sizeof (MBR));
         fseek(file,0,SEEK_SET);
         fread(mbr,sizeof (MBR),1,file);
@@ -467,10 +467,40 @@ void analisisMkfile(char comando[]){
 
         cout << "Aviso -> Se procede a crear carpetas que no existen...."<<endl;
         Pm = true;
-        ejecutarMkfile(valor_id,valor_path);
+        DISCO disco = buscarDisco(valor_id);
+        bool disk_or = validacionPathMount(disco.path);
+        string nuevo = crearPathCopia(disco.path);
+        char nuevopath[100]="";
+        strcpy(nuevopath,nuevo.c_str());
+        bool disk_cp = validacionPathMount(nuevopath);
+
+        if(disk_or && disk_cp){
+            ejecutarMkfile(disco,valor_id,valor_path,disco.path);
+            ejecutarMkfile(disco,valor_id,valor_path,nuevopath);
+        }else if(disk_cp){
+            ejecutarMkfile(disco,valor_id,valor_path,nuevopath);
+        }else{
+            cout << "Error -> El disco no existe para aplicar mkfile"<<endl;
+        }
+
+
     }else{
 
         cout << "Aviso -> Se procede a agregar archivo"<<endl;
-        ejecutarMkfile(valor_id,valor_path);
+        DISCO disco = buscarDisco(valor_id);
+        bool disk_or = validacionPathMount(disco.path);
+        string nuevo = crearPathCopia(disco.path);
+        char nuevopath[100]="";
+        strcpy(nuevopath,nuevo.c_str());
+        bool disk_cp = validacionPathMount(nuevopath);
+
+        if(disk_or && disk_cp){
+            ejecutarMkfile(disco,valor_id,valor_path,disco.path);
+            ejecutarMkfile(disco,valor_id,valor_path,nuevopath);
+        }else if(disk_cp){
+            ejecutarMkfile(disco,valor_id,valor_path,nuevopath);
+        }else{
+            cout << "Error -> El disco no existe para aplicar mkfile"<<endl;
+        }
     }
 }

@@ -15,10 +15,10 @@
 #include "../Comandos/mkdisk.h"
 using namespace std;
 
-void crearEXT3(DISCO disco,char _id[]){
+void crearEXT3(DISCO disco,char _id[],char path[]){
 
     FILE* file;
-    file = fopen(disco.path,"rb+");
+    file = fopen(path,"rb+");
     //Se leer el mbr
     MBR *mbr = (MBR*) malloc(sizeof (MBR));
     fseek(file,0,SEEK_SET);
@@ -183,8 +183,30 @@ void formatoMkfs(char _id[], char _type[]){
         if(strcmp(_type,"fast")==0){
 
         }else{
-            //siempre es full, sino se especifica
-            crearEXT3(disco,_id);
+            for (int i = 0; i < 1; ++i) {
+
+            }
+
+            //para raid
+            bool disk_or = validacionPathMount(disco.path);
+            string nuevo = crearPathCopia(disco.path);
+            char nuevopath[100]="";
+            strcpy(nuevopath,nuevo.c_str());
+            bool disk_cp = validacionPathMount(nuevopath);
+
+            if(disk_or && disk_cp){
+                //siempre es full, sino se especifica
+                //disco original
+                crearEXT3(disco,_id,disco.path);
+                //disco copia
+                crearEXT3(disco,_id,nuevopath);
+            }else if(disk_cp){
+                //disco copia
+                crearEXT3(disco,_id,nuevopath);
+            }else{
+                cout << "Error -> El disco no existe para aplicar mkfs"<<endl;
+            }
+
 
         }
     }else{

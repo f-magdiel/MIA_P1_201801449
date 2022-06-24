@@ -7,6 +7,8 @@
 #include <cstdlib>
 
 #include "../Comandos/mkdisk.h"
+#include "../Estructuras/DISCO.h"
+#include "../Comandos/mount.h"
 using namespace std;
 
 
@@ -101,7 +103,7 @@ void analisisRmdisk(char comando[]){
             eliminarDisco(valor_path);
         }
     }else{
-        cout << "Error -> El path no existe "<< valor_path<<endl;
+        cout << "Error -> El path no existe para ser eliminado "<< valor_path<<endl;
     }
 
 }

@@ -8,12 +8,13 @@
 #include "../Estructuras/SUPER_BLOQUE.h"
 #include "../Estructuras/INODOS.h"
 #include "../Estructuras/APUNTADORES.h"
+#include "../Estructuras/DISCO.h"
 using namespace std;
 static list<string>ListaCarpetas;
 static bool P=false;
 static int control=0;
 void analisisMkdir(char []);
-void ejecutarMkdir(char[], char[]);
+void ejecutarMkdir(DISCO *disco,char[], char[],char []);
 
 
 bool createRecursivo(FILE *file,SUPER_BLOQUE *super,list<string>*Lista,int *indice);
