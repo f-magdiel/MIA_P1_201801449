@@ -16,6 +16,7 @@ using namespace std;
 #include "../Comandos/mkfs.h"
 #include "../Comandos/mkdir.h"
 #include "../Comandos/mkfile.h"
+#include "../Comandos/syncronice.h"
 
 //analizador principal
 void analizadorGeneral(char comando[]){
@@ -74,6 +75,9 @@ void analizadorGeneral(char comando[]){
             cout << "Encontro: "<< lineacomando<<endl;
         }else if (strcmp(lineacomando,"rep")==0){
             analisisRep(comando);
+            memset(lineacomando,0,100);
+        }else if(strcmp(lineacomando,"syncronice")==0){
+            analisisSyncronice(comando);
             memset(lineacomando,0,100);
         }
      }

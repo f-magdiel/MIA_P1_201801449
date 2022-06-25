@@ -21,6 +21,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o.d"
+  "CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.o"
+  "CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o"
   "CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o.d"
   "CMakeFiles/MIA_P1_201801449.dir/main.cpp.o"

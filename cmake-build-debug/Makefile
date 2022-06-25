@@ -393,6 +393,30 @@ Comandos/rmdisk.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.s
 .PHONY : Comandos/rmdisk.cpp.s
 
+Comandos/syncronice.o: Comandos/syncronice.cpp.o
+.PHONY : Comandos/syncronice.o
+
+# target to build an object file
+Comandos/syncronice.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.o
+.PHONY : Comandos/syncronice.cpp.o
+
+Comandos/syncronice.i: Comandos/syncronice.cpp.i
+.PHONY : Comandos/syncronice.i
+
+# target to preprocess a source file
+Comandos/syncronice.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.i
+.PHONY : Comandos/syncronice.cpp.i
+
+Comandos/syncronice.s: Comandos/syncronice.cpp.s
+.PHONY : Comandos/syncronice.s
+
+# target to generate assembly for a file
+Comandos/syncronice.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MIA_P1_201801449.dir/build.make CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.s
+.PHONY : Comandos/syncronice.cpp.s
+
 Comandos/unmount.o: Comandos/unmount.cpp.o
 .PHONY : Comandos/unmount.o
 
@@ -483,6 +507,9 @@ help:
 	@echo "... Comandos/rmdisk.o"
 	@echo "... Comandos/rmdisk.i"
 	@echo "... Comandos/rmdisk.s"
+	@echo "... Comandos/syncronice.o"
+	@echo "... Comandos/syncronice.i"
+	@echo "... Comandos/syncronice.s"
 	@echo "... Comandos/unmount.o"
 	@echo "... Comandos/unmount.i"
 	@echo "... Comandos/unmount.s"

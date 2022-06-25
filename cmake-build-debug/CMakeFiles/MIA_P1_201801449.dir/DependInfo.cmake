@@ -19,6 +19,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mount.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/mount.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rep.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rep.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rmdisk.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/rmdisk.cpp.o.d"
+  "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/syncronice.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/syncronice.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/unmount.cpp" "CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/Comandos/unmount.cpp.o.d"
   "/home/magdiel/Escritorio/MIA_P1_201801449/main.cpp" "CMakeFiles/MIA_P1_201801449.dir/main.cpp.o" "gcc" "CMakeFiles/MIA_P1_201801449.dir/main.cpp.o.d"
   )

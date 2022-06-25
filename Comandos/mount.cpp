@@ -91,6 +91,7 @@ DISCO buscarDisco(char _id[]){
             for (int j = 0; j < 4; ++j) {
                 if(strcmp(disco[i].mbr_particion[j].id,_id)==0){
                     strcpy(disco[i].mbr_particion[j].formato,"full");
+                    disco[i].formato = 3;
                     return disco[i];
                     break;
                 }

@@ -121,6 +121,9 @@
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfile.cpp">
 			<Option target="MIA_P1_201801449"/>
 		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfile.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/mkfs.cpp">
 			<Option target="MIA_P1_201801449"/>
 		</Unit>
@@ -143,6 +146,12 @@
 			<Option target="MIA_P1_201801449"/>
 		</Unit>
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/rmdisk.h">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/syncronice.cpp">
+			<Option target="MIA_P1_201801449"/>
+		</Unit>
+		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/syncronice.h">
 			<Option target="MIA_P1_201801449"/>
 		</Unit>
 		<Unit filename="/home/magdiel/Escritorio/MIA_P1_201801449/Comandos/unmount.cpp">

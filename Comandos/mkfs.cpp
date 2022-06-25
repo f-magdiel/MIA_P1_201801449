@@ -183,9 +183,6 @@ void formatoMkfs(char _id[], char _type[]){
         if(strcmp(_type,"fast")==0){
 
         }else{
-            for (int i = 0; i < 1; ++i) {
-
-            }
 
             //para raid
             bool disk_or = validacionPathMount(disco.path);

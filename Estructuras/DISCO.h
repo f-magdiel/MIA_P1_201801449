@@ -34,6 +34,7 @@ typedef struct DISCO{
     char letra;
     char path[100];
     int numeral;//asignar numero al disco apra ir agregando al mount dba1->> este numm
+    int formato;
 }DISCO;
 
 #endif //MIA_P1_201801449_DISCO_H
