@@ -1,4 +1,4 @@
-/app/extra/clion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/magdiel/Escritorio/MIA_P1_201801449 -B /home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug
+/snap/clion/198/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S /home/magdiel/Escritorio/MIA_P1_201801449 -B /home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/magdiel/Escritorio/MIA_P1_201801449/cmake-build-debug

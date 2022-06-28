@@ -25,9 +25,10 @@ string folderJson(int indice,BLOQUECARPETA *carpeta,int tree){
     for (int i = 0; i < 4; ++i) {
         bloque["Name"]=charToString(carpeta->b_content[i].b_name);
         bloque["Inodo"]="Inodo"+to_string(carpeta->b_content[i].b_inodo);
-        jsonbloquecarpeta.push_back(bloque);
+        bloque["Bloque"]="Bloque"+ to_string(indice);
+        jsonbloques.push_back(bloque);
     }
-    jsonbloques["Bloque"+ to_string(indice)] = jsonbloquecarpeta;
+    //jsonbloques["Bloque"+ to_string(indice)] = jsonbloquecarpeta;
 
     return "so";
 }
@@ -44,10 +45,11 @@ string inodoJson(int indice,INODOS * inode,int tree){
             inodos+="\t\t\t\t\"Bloque\":"+to_string(inode->i_block[i])+"\n";
             inodos+="\t\t\t},\n";
             jsonbloque["Bloque"]= "Bloque"+to_string(inode->i_block[i]);
-            jsoninod.push_back(jsonbloque);
+            jsonbloque["Inodo"]="Inodo"+ to_string(indice);
+            jsoninodos.push_back(jsonbloque);
         }
     }
-    jsoninodos["Inodo"+ to_string(indice)]=jsoninod;
+    //jsoninodos["Inodosss"]=jsonbloque;
 
     inodos+="\t\t\t]\n";
     inodos+="\t\t},\n";
@@ -153,8 +155,8 @@ void ejecutarSyncronice(DISCO disco,char _id[], char _path[]){
                 allbloques+= folderJson(i,&readapuntador,1);*/
             }
         }
-        salida["Bloques"]=jsonbloques;
         salida["Inodos"]=jsoninodos;
+        salida["Bloques"]=jsonbloques;
         //finalizando
         string arbol = "{\n"+graphInodos+"\n\n\n"+allbloques+"}\n";
         fclose(file);

@@ -632,6 +632,7 @@ void repInodos(char _id[], char _name[],char _path[],char _dir[]){
 void repTree(char _id[], char _name[], char _path[],char _dir[]){
     string dir = charToString(_dir);
     string name_dot = dir+charToString(_name)+".dot";
+    string name_image = dir+ charToString(_name)+".svg";
 
     bool existedot = validacionDot(name_dot);
     DISCO disco = buscarDisco(_id);
@@ -733,6 +734,9 @@ void repTree(char _id[], char _name[], char _path[],char _dir[]){
         ofstream  fs(name_dot);
         fs << arbol<<endl;
         fs.close();
+        //se genera imagen
+        string coman = "dot -Tsvg "+name_dot+" -o "+name_image;
+        system(coman.c_str());
     }else{
         cout << "Error -> Ya existe un .dot con ese nombre"<<endl;
     }
