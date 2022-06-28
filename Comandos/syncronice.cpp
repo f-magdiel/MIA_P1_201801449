@@ -46,11 +46,12 @@ string inodoJson(int indice,INODOS * inode,int tree){
             inodos+="\t\t\t},\n";
             jsonbloque["Bloque"]= "Bloque"+to_string(inode->i_block[i]);
             jsonbloque["Inodo"]="Inodo"+ to_string(indice);
-            jsoninodos.push_back(jsonbloque);
+            //jsoninodos.push_back(jsonbloque);
         }
     }
+   
+    jsoninodos.push_back(jsonbloque);
     //jsoninodos["Inodosss"]=jsonbloque;
-
     inodos+="\t\t\t]\n";
     inodos+="\t\t},\n";
 
@@ -156,6 +157,7 @@ void ejecutarSyncronice(DISCO disco,char _id[], char _path[]){
             }
         }
         salida["Inodos"]=jsoninodos;
+        cout << salida<<endl;
         salida["Bloques"]=jsonbloques;
         //finalizando
         string arbol = "{\n"+graphInodos+"\n\n\n"+allbloques+"}\n";

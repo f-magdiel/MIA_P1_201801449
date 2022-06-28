@@ -1,11 +1,11 @@
 class Nodo {
-    constructor(dato) {
-        this.dato = dato;//nombre de la carpeta
-        this.siguiente = [100];//sub carpetas
-        for(var i in this.siguiente){
-            this.siguiente[i]=null;
-        }
+    constructor(nombre) {
+        this.nombre = nombre;
+        this.siguiente = null;
         this.anterior = null;
+        this.archivo = [100];
+        this.propietario = '';
+        this.colaboradores = ''; 
     }
 }
 
@@ -31,8 +31,7 @@ class Lista {
 
     }
 
-    
-
 }
 
-module.exports = Estructura;
+
+module.exports = Lista;

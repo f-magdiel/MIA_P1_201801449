@@ -17,6 +17,7 @@ app.get('/',function(req,res){
 //para admin
 var obj;
 //para leer el json 
+
 app.post('/readjson',function(req,res){
     obj = req.body;//se guarda el objeto json
     //mensaje para responder
@@ -27,17 +28,24 @@ app.post('/readjson',function(req,res){
 }) 
 
 var inodo='Inodo0';
-function estructurarCarpetas(obj){
+//siempre don dos parametros Inodo,Bloque
+function estructurarCarpetas(inodo,bloque,obj){
     //se empieza a buscar en inodo0
 
-    for(var num in obj.Inodos){
-        console.log(obj.Inodos[num])
-    }
+    /* for(var num in obj.Inodos){
+        var inodobusar = obj.Inodos[num].Inodo
+        var bloquebuscar = obj.Inodos[num].Bloque
+        for(var i in obj.Bloques){
+            if(inodobusar==obj.Bloques[i].Inodo){//encuetro en inodo
+                console.log(obj.Bloques[i].Bloque)
+                console.log(obj.Bloques[i].Bloque)
+                console.log(obj.Bloques[i].Bloque)
+                console.log(obj.Bloques[i].Bloque)
+            }
+        }
+    } */
 
 }
-
-
-//funcion para recorrer el json
 
 
 app.listen(port);
