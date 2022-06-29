@@ -1,11 +1,11 @@
 class Nodo {
-    constructor(nombre) {
+    constructor(nombre,tipo) {
         this.nombre = nombre;
         this.siguiente = null;
         this.anterior = null;
-        this.archivo = [100];
         this.propietario = '';
         this.colaboradores = ''; 
+        this.tipo = tipo;//1 si es carpeta y 0 si es archivo
     }
 }
 
@@ -16,8 +16,8 @@ class Lista {
         this.size = 0;
     }
 
-    add(dato) {
-        let nuevo = new Nodo(dato)
+    add(nombre,tipo) {
+        let nuevo = new Nodo(nombre,tipo)
         if (this.primero == null) {
             this.primero = nuevo;
             this.ultimo = this.primero;

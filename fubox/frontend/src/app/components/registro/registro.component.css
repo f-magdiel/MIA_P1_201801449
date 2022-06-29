@@ -1,0 +1,29 @@
+.mat-toolbar {
+    
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+  }
+
+.registro {
+    display: flex;
+    flex-direction: column;
+  }
+
+.registroContainer{
+    padding: auto;
+    margin-top: 3%;
+    margin-left: 40%;
+    margin-right: 40%;
+    border-radius: 2%;
+    
+}
+
+.cardContainer{
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+    color: white;
+}
+
+.tituloCard{
+    font-size: large;
+    font-family:  Helvetica;
+    margin-left: 25%;
+}

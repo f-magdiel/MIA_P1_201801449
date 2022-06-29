@@ -1,0 +1,52 @@
+<mat-toolbar color="primary">
+<span>Registro en FuBox</span>
+</mat-toolbar>
+
+<div class="registroContainer">
+    
+    <mat-card class="cardContainer">
+        <mat-label class="tituloCard">Registro al FuBox</mat-label>
+        <mat-card>
+            <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre</mat-label>
+                <input matInput>
+              </mat-form-field>
+              
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Apellido</mat-label>
+                <input matInput>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre usuario</mat-label>
+                <input matInput>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Enter your email</mat-label>
+                <input matInput placeholder="pat@example.com" [formControl]="email" required>
+                <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Número de teléfono</mat-label>
+                <input matInput>
+              </mat-form-field>
+            
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Clave de acceso</mat-label>
+                <input matInput type="password" >
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            
+            <button mat-raised-button color="warn" type="submit" (click)="addUser()">Registrarse</button>
+        </mat-card>
+    </mat-card>
+</div>

@@ -46,11 +46,16 @@ string inodoJson(int indice,INODOS * inode,int tree){
             inodos+="\t\t\t},\n";
             jsonbloque["Bloque"]= "Bloque"+to_string(inode->i_block[i]);
             jsonbloque["Inodo"]="Inodo"+ to_string(indice);
-            //jsoninodos.push_back(jsonbloque);
+            jsoninodos.push_back(jsonbloque);
         }
     }
-   
-    jsoninodos.push_back(jsonbloque);
+   if(inode->i_block[0]==-1){
+        jsonbloque["Bloque"]= "Bloque"+to_string(inode->i_block[0]);
+        jsonbloque["Inodo"]="Inodo"+ to_string(indice);
+        jsoninodos.push_back(jsonbloque);
+    }
+
+
     //jsoninodos["Inodosss"]=jsonbloque;
     inodos+="\t\t\t]\n";
     inodos+="\t\t},\n";
