@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+    <span>Bienvenido Administrador</span>
+    <div class="espacio"></div>
+    <a mat-raised-button color="warn" (click)="showGestorCarpeta()">Gestión carpetas</a>
+    <div class="espaciobtn"></div>
+    <a mat-raised-button color="warn" (click)="showGerstorUsuario()">Gestión usuarios</a>
+    <div class="espaciobtn"></div>
+    <a mat-raised-button color="warn" routerLink="">Salir</a>
+</mat-toolbar>
+<mat-card *ngIf="visibleCarga" >
+    <mat-card-header> Seleccionar archivo JSON</mat-card-header>
+    <mat-card-content>
+    <input type="file" (change)="capturarFile($event)">
+    <button mat-raised-button color="warn" (click)="enviarAlServer()">Mandar al server</button>
+    </mat-card-content>
+</mat-card>
+<app-gestorcarpet *ngIf="visibleGestorCarpeta"></app-gestorcarpet>
+<app-gestoruser *ngIf="visibleGestorUsuario" ></app-gestoruser>

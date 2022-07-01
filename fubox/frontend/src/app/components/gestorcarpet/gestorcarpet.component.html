@@ -1,0 +1,47 @@
+<div>
+    <mat-card>
+        
+        <mat-card-content>
+            
+                <div mat-subheader>Carpetas y Archivos</div>
+               
+                <mat-list>
+                    <mat-selection-list #datas >
+                        <mat-list-item *ngFor="let dat of this.arrayResult" >
+                            <mat-icon mat-list-icon *ngIf="dat.tipo=='1'">folder</mat-icon>
+                            <mat-icon mat-list-icon *ngIf="dat.tipo=='0'">assignment</mat-icon>
+                            <div mat-line >{{dat.nombre}}</div>
+                            <div mat-line> 02/07/2022 </div>
+                            <label>Propietario: {{dat.Propietario}}</label>
+                            <mat-divider></mat-divider>
+                        </mat-list-item>
+                    </mat-selection-list>
+                </mat-list>
+            
+                
+           
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="warn"  >Agregar Propietario</button>
+            <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre usuario</mat-label>
+                <input matInput required >
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre carpeta</mat-label>
+                <input matInput required >
+              </mat-form-field>
+            <button mat-raised-button color="warn">Eliminar Propietario</button>
+            <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre usuario</mat-label>
+                <input matInput required >
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre carpeta</mat-label>
+                <input matInput required >
+              </mat-form-field>
+            
+              
+        </mat-card-actions>
+    </mat-card>
+</div>

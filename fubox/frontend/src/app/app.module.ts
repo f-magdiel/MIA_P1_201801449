@@ -17,13 +17,27 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete'
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { HttpClientModule } from '@angular/common/http';
+import { PanelusuarioComponent } from './components/panelusuario/panelusuario.component';
+import { PaneladminComponent } from './components/paneladmin/paneladmin.component';
+import { SistemausuarioComponent } from './components/sistemausuario/sistemausuario.component';
+import { ColaboracionusuarioComponent } from './components/colaboracionusuario/colaboracionusuario.component';
+import {MatListModule} from '@angular/material/list';
+import { GestorcarpetComponent } from './components/gestorcarpet/gestorcarpet.component';
+import { GestoruserComponent } from './components/gestoruser/gestoruser.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InicioComponent,
     LoginComponent,
-    RegistroComponent
+    RegistroComponent,
+    PanelusuarioComponent,
+    PaneladminComponent,
+    SistemausuarioComponent,
+    ColaboracionusuarioComponent,
+    GestorcarpetComponent,
+    GestoruserComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +54,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    HttpClientModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

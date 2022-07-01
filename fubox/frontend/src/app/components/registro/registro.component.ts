@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
+import { RegistroService } from 'src/app/services/registro.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro',
@@ -8,10 +10,9 @@ import {FormControl, Validators} from '@angular/forms';
 })
 
 export class RegistroComponent implements OnInit {
-  value = 'Clear me';
-
   
-  constructor() { }
+  
+  constructor(private registroform: RegistroService) { }
 
   ngOnInit(): void {
   }
@@ -25,9 +26,51 @@ export class RegistroComponent implements OnInit {
 
     return this.email.hasError('email') ? 'Not a valid email' : '';
   }
-
-  addUser(){
-    console.log("Se agrega datos")
+  //modelo para recibir los valores del usuario
+  user = {
+    nombre:'',
+    apellido:'',
+    usuario:'',
+    correo:'',
+    telefono:'',
+    clave:'',
+    fecha_nacimiento:'',
+    fecha_creacion:''
   }
+ 
+  addUser(){
+    
+    //hacer peticion al servidor de agregar
+   this.registroform.postUser(this.user)
+   .subscribe(
+    res => {
+      
+      if(res.validate==true){
+        Swal.fire({
+          icon: 'success',
+          title: 'Registrado',
+          text: 'Cuenta creada',
+        })
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Cuenta duplicada',
+          text: 'No se puede crear cuenta',
+        })
+      }
+      
+      
+    },
+    err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'No se pudo registrar',
+        text: 'No se creo cuenta',
+      })
+    }
+   )
+  }
+
+  
 
 }

@@ -1,0 +1,12 @@
+<mat-toolbar color="primary">
+    <span>Bienvenido</span>
+    <div class="espacio"></div>
+    <a mat-raised-button color="warn" (click)="showSistema()">Mi sistema de archivos</a>
+    <div class="espaciobtn"></div>
+    <a mat-raised-button color="warn">Colaborador</a>
+    <div class="espaciobtn"></div>
+    <a mat-raised-button color="warn" routerLink="">Salir</a>
+</mat-toolbar>
+<app-sistemausuario *ngIf="visibleSistema" ></app-sistemausuario>
+<app-colaboracionusuario *ngIf="visibleColaborador"></app-colaboracionusuario>
+

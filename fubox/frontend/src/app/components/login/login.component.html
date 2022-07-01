@@ -1,1 +1,28 @@
-<p>login works!</p>
+<mat-toolbar color="primary">
+    <span>Login FuBox</span>
+    </mat-toolbar>
+    
+    <div class="registroContainer">
+        
+        <mat-card class="cardContainer">
+            <mat-label class="tituloCard">Login al FuBox</mat-label>
+            <mat-card>
+                <form (ngSubmit)="validationLogin()">
+    
+                  <mat-form-field appearance="fill" class="registro">
+                    <mat-label>Nombre usuario</mat-label>
+                    <input matInput required [(ngModel)]="data.usuario">
+                  </mat-form-field>
+                
+                  <mat-form-field appearance="fill" class="registro">
+                    <mat-label>Clave de acceso</mat-label>
+                    <input matInput type="password" required [(ngModel)]="data.clave">
+                  </mat-form-field>
+                
+                <button mat-raised-button color="warn" type="submit" >
+                  Login
+                </button>
+                </form>
+            </mat-card>
+        </mat-card>
+    </div>

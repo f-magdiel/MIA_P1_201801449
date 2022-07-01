@@ -1,0 +1,9 @@
+.mat-toolbar {
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+  }
+  .espacio{
+    flex: 1 1 auto;
+  }
+  .espaciobtn{
+    margin-left: 2%;
+  }
