@@ -12,34 +12,24 @@
                             <mat-icon mat-list-icon *ngIf="dat.tipo=='0'">assignment</mat-icon>
                             <div mat-line >{{dat.nombre}}</div>
                             <div mat-line> 02/07/2022 </div>
-                            <label>Propietario: {{dat.Propietario}}</label>
+                            <div mat-line>Propietario: {{dat.propietario}}</div>
                             <mat-divider></mat-divider>
                         </mat-list-item>
                     </mat-selection-list>
                 </mat-list>
-            
                 
-           
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button color="warn"  >Agregar Propietario</button>
+            <button mat-raised-button color="warn" (click)="agregarPropietario()" >Agregar Propietario</button>
             <mat-form-field appearance="fill" class="registro">
                 <mat-label>Nombre usuario</mat-label>
-                <input matInput required >
+                <input matInput required [(ngModel)]="seleccionado.propietario">
               </mat-form-field>
               <mat-form-field appearance="fill" class="registro">
                 <mat-label>Nombre carpeta</mat-label>
-                <input matInput required >
+                <input matInput required [(ngModel)]="seleccionado.nombre">
               </mat-form-field>
-            <button mat-raised-button color="warn">Eliminar Propietario</button>
-            <mat-form-field appearance="fill" class="registro">
-                <mat-label>Nombre usuario</mat-label>
-                <input matInput required >
-              </mat-form-field>
-              <mat-form-field appearance="fill" class="registro">
-                <mat-label>Nombre carpeta</mat-label>
-                <input matInput required >
-              </mat-form-field>
+            
             
               
         </mat-card-actions>

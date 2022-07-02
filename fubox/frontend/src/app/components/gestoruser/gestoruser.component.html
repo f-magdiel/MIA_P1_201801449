@@ -1,1 +1,28 @@
-<p>gestoruser works!</p>
+<div>
+    <mat-card>
+        <mat-card-content>
+            <div mat-subheader>Todos los usuarios registrados</div>
+            <mat-list>
+                <mat-selection-list>
+                    <mat-list-item *ngFor="let dato of this.arrayUser">
+                        <mat-icon mat-list-icon  >account_circle</mat-icon>
+                        <mat-icon mat-list-icon *ngIf="dato.estado_cuenta=='1'"> check_circle</mat-icon>
+                        <mat-icon mat-list-icon *ngIf="dato.estado_cuenta=='0'">check_circle_outline</mat-icon>
+                        <div mat-line >Nombre: {{dato.nombre}}</div>
+                        <div mat-line >Usuario: {{dato.usuario}}</div>
+                        <div mat-line> Fecha de registro: {{dato.fecha_creacion}} </div>
+                        <div mat-line> correo: {{dato.correo}} </div>
+                    </mat-list-item>
+                </mat-selection-list>
+            </mat-list>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="warn" (click)="cambiarEstadoCuenta()" >Cambiar estado cuenta</button>
+            <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre usuario</mat-label>
+                <input matInput required [(ngModel)]="usuario.nombre">
+              </mat-form-field>
+              
+        </mat-card-actions>
+    </mat-card>
+</div>

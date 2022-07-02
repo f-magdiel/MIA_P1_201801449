@@ -1,6 +1,6 @@
 import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { RegistroService } from 'src/app/services/registro.service';
-
+import Swal from 'sweetalert2';
 var result = [];
 @Component({
   selector: 'app-gestorcarpet',
@@ -28,7 +28,6 @@ export class GestorcarpetComponent implements OnInit {
   seleccionado={
     nombre:'',
     propietario:'',
-    tipo:''
   }
 
   consultaCarpetas(){
@@ -36,7 +35,9 @@ export class GestorcarpetComponent implements OnInit {
     .subscribe(
       res =>{
         for(let i in res.carpetas){
-          this.arrayResult.push(res.carpetas[i])
+          if(res.carpetas[i].nombre!=''){
+            this.arrayResult.push(res.carpetas[i])
+          }
           
         }
       
@@ -45,7 +46,28 @@ export class GestorcarpetComponent implements OnInit {
     )
   }
   
-  
+  agregarPropietario(){
+    this.serviceConsult.addPropietario(this.seleccionado)
+    .subscribe(
+      res=>{
+        console.log(res)
+        if(res.validate){
+          Swal.fire({
+            icon: 'success',
+            title: 'Cambio de propietario',
+            text: 'Cambiado exitosamente',
+          })
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Cambio de propietario',
+            text: 'No se pudo cambiar de propietario',
+          })
+
+        }
+      }
+    )
+  }
 
 
   

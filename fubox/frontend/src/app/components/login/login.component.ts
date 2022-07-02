@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RegistroService } from 'src/app/services/registro.service';
+import { EnviodatosService } from 'src/app/services/enviodatos.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 let datauser:any;
@@ -10,7 +11,7 @@ let datauser:any;
 })
 export class LoginComponent implements OnInit {
   
-  constructor(private loginForm: RegistroService, private _router:Router) { }
+  constructor(private loginForm: RegistroService, private _router:Router,private sendDatos:EnviodatosService) { }
 
   ngOnInit(): void {
   }
@@ -24,18 +25,19 @@ export class LoginComponent implements OnInit {
   }
   
   validationLogin(){
-    console.log(this.data)
+    
     this.loginForm.loginUser(this.data)
     .subscribe(
       res =>{
         if(res.validate){
           datauser = res
+          
           Swal.fire({
             icon: 'success',
             title: 'Inicio de Sesión',
             text: 'Sesión iniciado',
           })
-          this._router.navigate(['/panelusuario'])
+          this._router.navigate(['/panelusuario',res.usuarios.usuario])
         }else{
           Swal.fire({
             icon: 'error',
@@ -52,6 +54,7 @@ export class LoginComponent implements OnInit {
         })
       }
     )
+    
   }
 
 

@@ -35,7 +35,10 @@ export class RegistroComponent implements OnInit {
     telefono:'',
     clave:'',
     fecha_nacimiento:'',
-    fecha_creacion:''
+    fecha_creacion:'03/07/2022',
+    estado_cuenta:0,
+    contador:0,
+    contenido:[]
   }
  
   addUser(){

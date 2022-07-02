@@ -68,18 +68,27 @@ const userRoutes = (app, fs) => {
           const {usuario,clave} = req.body;
           let jsonusuarios = JSON.parse(data)
           let datoscompletos;
-          console.log(usuario+""+clave)
+          
           if(jsonusuarios.length!=0){
             for(let i in jsonusuarios.usuarios){
-              console.log(jsonusuarios.usuarios[i].usuario)
+              //el user ingresas sus datos correctos
               if(usuario == jsonusuarios.usuarios[i].usuario && clave == jsonusuarios.usuarios[i].clave){
-                  datoscompletos = jsonusuarios.usuarios[i];
+                  //esta dado de alta
+                  if(jsonusuarios.usuarios[i].estado_cuenta==1){
+                    datoscompletos = jsonusuarios.usuarios[i];
                   flag_res = false;
                   return res.send({
-                    datoscompletos,
+                    "usuarios":datoscompletos,
                       "estado":200,
                       "validate":true
                   });
+                  }else{
+                    return res.send({
+                      datoscompletos,
+                        "estado":400,
+                        "validate":false
+                    });
+                  }
                   
               }
             }
@@ -177,6 +186,153 @@ const userRoutes = (app, fs) => {
         })
       })
     })
+
+
+
+    //para agregar proprietario carpetas
+  app.post('/addPropietario',(req,res)=>{
+    fs.readFile(path,'utf8',(err,data)=>{
+      if(err){
+        throw err;
+      }
+      const {nombre,propietario}=req.body;
+      let aux = JSON.parse(data)
+      //se busca nombre carpetas
+      for(let i in aux.carpetas){
+        if(aux.carpetas[i].nombre==nombre){
+          aux.carpetas[i].propietario = propietario
+          //se escribe el json 
+          data = JSON.stringify(aux)
+          fs.writeFile(path,data,(err)=> {
+            res.send({
+              "status":200,
+              "validate":true
+              })
+            })
+        }
+      }
+    })
+  })
+
+  //para mostrar todos los usuarios
+  app.get('/allUsers',(req,res)=>{
+    fs.readFile(path,'utf8',(err,data)=>{
+      if(err){
+        throw err;
+      }
+      let aux = JSON.parse(data)
+      res.send({
+        "usuarios":aux.usuarios
+      })
+    })
+  })
+
+
+  //para cambiar el estado de cuenta
+app.post('/changeCuenta',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if(err){
+      throw err;
+    }
+    console.log(req.body)
+    let flag_error=true;
+    let nombreusuario = req.body.nombre
+    let aux = JSON.parse(data)
+    for(let i in aux.usuarios){//se busca la cuenta para cambiar de estado
+      if(nombreusuario==aux.usuarios[i].usuario){
+        if(aux.usuarios[i].estado_cuenta==1){//estado cuenta activa se desactiva
+          aux.usuarios[i].estado_cuenta = 0
+          flag_error=false;
+          data = JSON.stringify(aux)
+          fs.writeFile(path,data,(err)=> {
+            res.send({
+              "status":200,
+              "validate":true
+              })
+            })
+            break
+        }else{
+          flag_error=false;
+          aux.usuarios[i].estado_cuenta = 1
+          data = JSON.stringify(aux)
+          fs.writeFile(path,data,(err)=> {
+            res.send({
+              "status":200,
+              "validate":true
+              })
+            })
+            break
+        }
+      }
+    }
+
+    //para error
+    if(flag_error){
+      res.send({
+        "status":400,
+        "validate":false
+        })
+    }
+  })
+})
+
+//crear carpetas por usuarios
+app.post('/createCarpeta',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    //estructura carpeta
+    carpeta={
+      "nombre":req.body.nombre,
+      "propietario":req.body.propietario,
+      "tipo":req.body.tipo
+    }
+    
+    let jsoncarpetas = JSON.parse(data)
+    jsoncarpetas.carpetas.push(carpeta)
+    data = JSON.stringify(jsoncarpetas)
+    fs.writeFile(path,data,(err)=> {
+      res.send({
+        "status":200,
+        "validate":true
+        })
+      })
+
+  })
+})
+
+//eliminar carpeta o archivo por usuario
+app.post('/deleteCarpeta',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    let namecarpeta = req.body.nombre
+    let jsonsalida = JSON.parse(data)
+
+    //buscar carepta a eliminar
+    for(let i in jsonsalida.carpetas){
+      if(jsonsalida.carpetas[i].nombre==namecarpeta){
+        jsonsalida.carpetas[i].nombre=''
+        jsonsalida.carpetas[i].propietario=''
+        jsonsalida.carpetas[i].tipo = ''
+        data = JSON.stringify(jsonsalida)
+        fs.writeFile(path,data,(err)=> {
+          res.send({
+            "status":200,
+            "validate":true
+            })
+          })
+          break
+      }
+    }
+  })
+})
+
 }
+
+
+  
   
 module.exports = userRoutes;

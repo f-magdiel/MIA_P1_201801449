@@ -7,21 +7,38 @@
             <mat-list>
                 <div mat-subheader>Carpetas y Archivos</div>
                 <mat-selection-list>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>folder</mat-icon>
-                        <div mat-line>prueba</div>
-                        <div mat-line> 30/06/2022 </div>
+                    <mat-list-item *ngFor="let dat of this.arrayResult">
+                        <mat-icon mat-list-icon *ngIf="dat.tipo=='1'">folder</mat-icon>
+                        <mat-icon mat-list-icon *ngIf="dat.tipo=='0'">assignment</mat-icon>
+                        <div mat-line  >{{dat.nombre}}</div>
+                        <div mat-line > 02/07/2022 </div>
+                        <div mat-line  >Propietario: {{dat.propietario}}</div>
                         <mat-divider></mat-divider>
-                    </mat-list-option>
+                    </mat-list-item>
                 </mat-selection-list>
             </mat-list>
         </mat-card-content>
         <mat-card-actions>
-            <button>Agregar Carpeta</button>
-
-            <button>Eliminar Carpeta</button>
-            <button>Agregar Archivo</button>
-            <button>Eliminar Archivo</button>
+            <button mat-raised-button color="warn"class="espaciobtn" (click)="sendCreateCarpeta()">Crear </button>
+            <mat-form-field appearance="fill" class="espaciobtn">
+                <mat-label>Nombre carpeta o archivo</mat-label>
+                <input matInput required [(ngModel)]="crearCarpeta.nombre">
+            </mat-form-field>
+            <button mat-raised-button color="warn"class="espaciobtn" (click)="deleteCarpeta()">Eliminar </button>
+            <mat-form-field appearance="fill" class="espaciobtn">
+                <mat-label>Nombre carpeta o archivo</mat-label>
+                <input matInput required [(ngModel)]="eliminarCarpeta.nombre">
+            </mat-form-field>
+            <button mat-raised-button color="warn"class="espaciobtn">Agregar colaborador</button>
+            <mat-form-field appearance="fill" class="espaciobtn">
+                <mat-label>Nombre carpeta</mat-label>
+                <input matInput required >
+            </mat-form-field>
+            
+            <mat-form-field appearance="fill" class="espaciobtn">
+                <mat-label>Correo colaborador</mat-label>
+                <input matInput required >
+            </mat-form-field>
             
         </mat-card-actions>
     </mat-card>

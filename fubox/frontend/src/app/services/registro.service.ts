@@ -29,4 +29,27 @@ export class RegistroService {
   getAllCarpetas(){
     return this.http.get<any>(this.URL+'/allCarpetas');
   }
+  //para agregar prop 
+  addPropietario(propietario:any){
+    return this.http.post<any>(this.URL+'/addPropietario',propietario);
+  }
+  //para obtener y mostrar todas la cuentas
+  getAllUsers(){
+    return this.http.get<any>(this.URL+'/allUsers');
+  }
+
+  //para cambiar estado cuenta
+  changeEstadoCuenta(cuenta:any){
+    return this.http.post<any>(this.URL+'/changeCuenta',cuenta);
+  }
+
+  //para crear carpeta por un usuario
+  createCarpetaByUser(carpeta:any){
+    return this.http.post<any>(this.URL+'/createCarpeta',carpeta);
+  }
+
+  //para eliminar carpeta por un usuario
+  deleteCarpetaByUser(carpeta:any){
+    return this.http.post<any>(this.URL+'/deleteCarpeta',carpeta);
+  }
 }
