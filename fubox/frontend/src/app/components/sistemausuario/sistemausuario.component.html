@@ -29,15 +29,15 @@
                 <mat-label>Nombre carpeta o archivo</mat-label>
                 <input matInput required [(ngModel)]="eliminarCarpeta.nombre">
             </mat-form-field>
-            <button mat-raised-button color="warn"class="espaciobtn">Agregar colaborador</button>
+            <button mat-raised-button color="warn"class="espaciobtn" (click)="sendColaborador()">Agregar colaborador</button>
             <mat-form-field appearance="fill" class="espaciobtn">
-                <mat-label>Nombre carpeta</mat-label>
-                <input matInput required >
+                <mat-label>Nombre carpeta o archivo</mat-label>
+                <input matInput required [(ngModel)]="crearColaborador.carpeta" >
             </mat-form-field>
             
             <mat-form-field appearance="fill" class="espaciobtn">
                 <mat-label>Correo colaborador</mat-label>
-                <input matInput required >
+                <input matInput required [(ngModel)]="crearColaborador.correo">
             </mat-form-field>
             
         </mat-card-actions>

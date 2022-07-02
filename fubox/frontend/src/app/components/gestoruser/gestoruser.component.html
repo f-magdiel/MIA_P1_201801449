@@ -8,6 +8,7 @@
                         <mat-icon mat-list-icon  >account_circle</mat-icon>
                         <mat-icon mat-list-icon *ngIf="dato.estado_cuenta=='1'"> check_circle</mat-icon>
                         <mat-icon mat-list-icon *ngIf="dato.estado_cuenta=='0'">check_circle_outline</mat-icon>
+                        <mat-icon mat-list-icon *ngIf="dato.estado_cuenta=='2'">vpn_key</mat-icon>
                         <div mat-line >Nombre: {{dato.nombre}}</div>
                         <div mat-line >Usuario: {{dato.usuario}}</div>
                         <div mat-line> Fecha de registro: {{dato.fecha_creacion}} </div>
@@ -22,6 +23,11 @@
                 <mat-label>Nombre usuario</mat-label>
                 <input matInput required [(ngModel)]="usuario.nombre">
               </mat-form-field>
+              <button mat-raised-button color="warn" (click)="resetClave()" >Resetar clave</button>
+              <mat-form-field appearance="fill" class="registro">
+                  <mat-label>Nombre usuario</mat-label>
+                  <input matInput required [(ngModel)]="reset.usuario">
+                </mat-form-field>
               
         </mat-card-actions>
     </mat-card>

@@ -17,6 +17,10 @@ export class GestoruserComponent implements OnInit {
     nombre:''
   }
 
+  reset={
+    usuario:''
+  }
+
   consultaUser(){
     this.serviceConsult.getAllUsers()
     .subscribe(
@@ -50,4 +54,19 @@ export class GestoruserComponent implements OnInit {
       }
     )
   }
+
+  resetClave(){
+    this.serviceConsult.resetClave(this.reset)
+    .subscribe(
+      res=>{
+        console.log(res)
+        Swal.fire({
+          icon: 'success',
+          title: 'Reset Clave',
+          text: 'Se ha reseteado la clave del usuario',
+        })
+      }
+    )
+  }
+
 }

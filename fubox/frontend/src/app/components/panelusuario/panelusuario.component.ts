@@ -17,24 +17,30 @@ export class PanelusuarioComponent implements OnInit {
 
   visibleSistema:boolean=false;
   visibleColaborador:boolean=false;
+  visibleCorreo:boolean=false;
+
   ngOnInit(): void {
     console.log("Se recibe")
     const id = this.route.snapshot.params['id']
     this.nameusuario = id
-    
   }
 
   showSistema(){
-    console.log("muestra sistema")
-    this.sendDatos.disparadorDeDatos.emit({
-      "nombre":this.nameusuario
-    })
-    this.visibleSistema = this.visibleSistema?false:true
     
+    this.visibleSistema = this.visibleSistema?false:true
+    this.visibleColaborador = false
+    this.visibleCorreo = false
   }
 
   showColaborador(){
     this.visibleColaborador = this.visibleColaborador?false:true
+    this.visibleSistema = false
+    this.visibleCorreo = false
   }
 
+  showCorreo(){
+    this.visibleCorreo = this.visibleCorreo?false:true
+    this.visibleColaborador = false
+    this.visibleSistema = false
+  }
 }

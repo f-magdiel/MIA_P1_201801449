@@ -26,6 +26,11 @@ export class SistemausuarioComponent implements OnInit {
     tipo:0
   }
 
+  crearColaborador={
+    carpeta:'',
+    correo:''
+  }
+
   getSistemaUsuario(){
     this.registroService.getAllCarpetas()
     .subscribe(
@@ -116,6 +121,26 @@ export class SistemausuarioComponent implements OnInit {
     )
   }
 
- 
+  sendColaborador(){
+    this.registroService.addColaborador(this.crearColaborador)
+    .subscribe(
+      res=>{
+        console.log(res)
+        if(res.validate){
+          Swal.fire({
+            icon: 'success',
+            title: 'Colaborador',
+            text: 'Colaborador agregado exitosamente',
+          })
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Colaborador',
+            text: 'No se pudo agregar colaborador',
+          })
+        }
+      }
+    )
+  }
 
 }

@@ -1,3 +1,5 @@
+const { json } = require("express");
+
 const userRoutes = (app, fs) => {
     const path = './db.json'
 
@@ -90,15 +92,29 @@ const userRoutes = (app, fs) => {
                     });
                   }
                   
+              }else if(usuario == jsonusuarios.usuarios[i].usuario && clave != jsonusuarios.usuarios[i].clave){//user correcto pero pass no
+                console.log("solo user corecto")
+                let num = jsonusuarios.usuarios[i].contador
+                num = 1 +num
+                jsonusuarios.usuarios[i].contador = num
+                console.log(jsonusuarios.usuarios[i].contador)
+                
+                //si es igual a 3 valio el inicio se sesion
+                if(jsonusuarios.usuarios[i].contador==3){
+                  jsonusuarios.usuarios[i].estado_cuenta = 0
+                }
               }
             }
           }
     
           if(flag_res){
-            res.send({
-              "estado":400,
-              "validate":false
-            });
+            data = JSON.stringify(jsonusuarios)
+            fs.writeFile(path,data,(err)=> {
+              res.send({
+                "status":400,
+                "validate":false
+                })
+              })
           }
         });
       });
@@ -149,7 +165,8 @@ const userRoutes = (app, fs) => {
                                 carpeta ={
                                   "nombre":obj.Bloques[j].Name,
                                   "propietario":'',
-                                  "tipo":'0'
+                                  "tipo":'0',
+                                  "colaborador":[]
                                 }
                                 dataJsonSalida.carpetas.push(carpeta)
                                 estructurarCarpetas(obj.Bloques[j].Inodo,obj);
@@ -160,7 +177,8 @@ const userRoutes = (app, fs) => {
                                 carpeta ={
                                   "nombre":obj.Bloques[j].Name,
                                   "propietario":'',
-                                  "tipo":'1'
+                                  "tipo":'1',
+                                  "colaborador":[]
                                 }
                                 dataJsonSalida.carpetas.push(carpeta)
                                 estructurarCarpetas(obj.Bloques[j].Inodo,obj);
@@ -286,7 +304,8 @@ app.post('/createCarpeta',(req,res)=>{
     carpeta={
       "nombre":req.body.nombre,
       "propietario":req.body.propietario,
-      "tipo":req.body.tipo
+      "tipo":req.body.tipo,
+      "colaborador":[]
     }
     
     let jsoncarpetas = JSON.parse(data)
@@ -327,6 +346,171 @@ app.post('/deleteCarpeta',(req,res)=>{
           break
       }
     }
+  })
+})
+
+//para agregar colaborador
+app.post('/addColaborador',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    colab ={
+      usuario:''
+    }
+    let jsonSalida = JSON.parse(data)
+    let usuario;
+    let carpeta = req.body.carpeta
+    let correo = req.body.correo
+    //buscar usuario primero y mandarle correo
+    for(let i in jsonSalida.usuarios){
+      if(jsonSalida.usuarios[i].correo == correo){
+        colab.usuario = jsonSalida.usuarios[i].usuario
+        mail={
+          mensaje:'Has sido agregado a un carpeta => '+carpeta
+        }
+        jsonSalida.usuarios[i].contenido.push(mail)
+        break
+      }
+    }
+
+    //buscar carpeta y agregar colaborador
+    for (let j in jsonSalida.carpetas){
+        if(jsonSalida.carpetas[j].nombre==carpeta){
+          jsonSalida.carpetas[j].colaborador.push(colab)
+          data = JSON.stringify(jsonSalida)
+        fs.writeFile(path,data,(err)=> {
+          res.send({
+            "status":200,
+            "validate":true
+          })
+        })
+        break
+        }
+    }
+
+  })
+})
+
+//finalizar colaboracion
+app.post('/finColaboracion',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    fincolab={
+      carpeta:req.body.carpeta,
+      usuario:req.body.usuario
+    }
+    
+
+    let jsonSalida = JSON.parse(data)
+
+    for(let i in jsonSalida.carpetas){
+      if(jsonSalida.carpetas[i].nombre==fincolab.carpeta){
+        for(let j in jsonSalida.carpetas[i].colaborador){
+          if(jsonSalida.carpetas[i].colaborador[j].usuario==fincolab.usuario){
+            jsonSalida.carpetas[i].colaborador[j].usuario = ''
+            break
+          }
+        }
+      }
+    }
+
+    // se guarda
+    data = JSON.stringify(jsonSalida)
+        fs.writeFile(path,data,(err)=> {
+          res.send({
+            "status":200,
+            "validate":true
+          })
+        })
+
+  })
+})
+
+//para obtener los correos del user
+app.post('/getMails',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    //obtendo el req
+    let usuario = req.body.usuario
+    let jsonSalida = JSON.parse(data)
+    console.log(usuario)
+    //busco el user y retorno el data
+    for(let i in jsonSalida.usuarios){
+      if(jsonSalida.usuarios[i].usuario==usuario){
+        res.send({
+          "correo":jsonSalida.usuarios[i].contenido
+        })
+        break
+      }
+    }
+
+  })
+})
+
+//para reset pass
+app.post('/solicitudClave',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    let usuario = req.body.usuario
+    //busco usuario
+    let jsonSalida = JSON.parse(data)
+    for(let i in jsonSalida.usuarios){
+      if(jsonSalida.usuarios[i].usuario==usuario){
+        //se cambia estado
+        jsonSalida.usuarios[i].estado_cuenta = 2//para soliictar cambio pass
+        data = JSON.stringify(jsonSalida)
+        fs.writeFile(path,data,(err)=> {
+          res.send({
+            "status":200,
+            "validate":true
+          })
+        })
+
+        break
+      }
+    }
+  })
+})
+
+//resetar clave por admin
+app.post('/resetClave',(req,res)=>{
+  fs.readFile(path,'utf8',(err,data)=>{
+    if (err) {
+      throw err;
+    }
+    let usuario = req.body.usuario
+    //busco usuario le cambio pass y mando correo
+    let jsonSalida = JSON.parse(data)
+
+    for(let i in jsonSalida.usuarios){
+      if(jsonSalida.usuarios[i].usuario==usuario){
+        //encuentro
+        mail = {
+          mensaje:"Se ha restablecido su clave: clave nuevo es 1234 tiene un 5m de tiempo"
+        }
+        jsonSalida.usuarios[i].clave='1234'
+        jsonSalida.usuarios[i].contenido.push(mail)
+        jsonSalida.usuarios[i].estado_cuenta = 1
+        //se cierra y guarda
+        data = JSON.stringify(jsonSalida)
+        fs.writeFile(path,data,(err)=> {
+          res.send({
+            "status":200,
+            "validate":true
+          })
+        })
+
+        break
+      }
+    }
+
   })
 })
 

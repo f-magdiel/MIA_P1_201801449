@@ -19,10 +19,18 @@
                     <input matInput type="password" required [(ngModel)]="data.clave">
                   </mat-form-field>
                 
-                <button mat-raised-button color="warn" type="submit" >
+                <button mat-raised-button color="warn" type="submit" class="espaciobtn" >
                   Login
                 </button>
+                
                 </form>
             </mat-card>
+            <mat-card-content>
+              <button mat-raised-button color="warn" class="espaciobtn" (click)="resetClave()" > Reset Clave</button>
+              <mat-form-field appearance="fill" class="registro">
+                <mat-label>Usuario para reset clave</mat-label>
+                <input matInput  required [(ngModel)]="reset.usuario" >
+              </mat-form-field>
+            </mat-card-content>
         </mat-card>
     </div>

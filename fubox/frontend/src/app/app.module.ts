@@ -25,6 +25,11 @@ import { ColaboracionusuarioComponent } from './components/colaboracionusuario/c
 import {MatListModule} from '@angular/material/list';
 import { GestorcarpetComponent } from './components/gestorcarpet/gestorcarpet.component';
 import { GestoruserComponent } from './components/gestoruser/gestoruser.component';
+import { ColaboradorComponent } from './components/colaborador/colaborador.component';
+import { CorreoComponent } from './components/correo/correo.component';
+import { Page404Component } from './components/page404/page404.component';
+import { AccesodenegadoComponent } from './components/accesodenegado/accesodenegado.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -37,7 +42,11 @@ import { GestoruserComponent } from './components/gestoruser/gestoruser.componen
     SistemausuarioComponent,
     ColaboracionusuarioComponent,
     GestorcarpetComponent,
-    GestoruserComponent
+    GestoruserComponent,
+    ColaboradorComponent,
+    CorreoComponent,
+    Page404Component,
+    AccesodenegadoComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +67,7 @@ import { GestoruserComponent } from './components/gestoruser/gestoruser.componen
     HttpClientModule,
     MatListModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

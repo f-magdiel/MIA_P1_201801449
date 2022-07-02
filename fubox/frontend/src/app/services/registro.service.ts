@@ -52,4 +52,29 @@ export class RegistroService {
   deleteCarpetaByUser(carpeta:any){
     return this.http.post<any>(this.URL+'/deleteCarpeta',carpeta);
   }
+
+  //para agregar colaborador
+  addColaborador(colaborador:any){
+    return this.http.post<any>(this.URL+'/addColaborador',colaborador);
+  }
+
+  //para finalizar colaboraion
+  deleteColaborador(fincolaborador:any){
+    return this.http.post<any>(this.URL+'/finColaboracion',fincolaborador);
+  }
+
+  //para obtener los correos
+  getCorreo(usuario:any){
+    return this.http.post<any>(this.URL+'/getMails',usuario);
+  }
+
+  //solicitar cambsio pass
+  solicitarChange(usuario:any){
+    return this.http.post<any>(this.URL+'/solicitudClave',usuario);
+  }
+
+  //reset clave por admin
+  resetClave(usuario:any){
+    return this.http.post<any>(this.URL+'/resetClave',usuario);
+  }
 }

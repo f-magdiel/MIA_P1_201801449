@@ -38,7 +38,9 @@ export class RegistroComponent implements OnInit {
     fecha_creacion:'03/07/2022',
     estado_cuenta:0,
     contador:0,
+    reset:0,
     contenido:[]
+    
   }
  
   addUser(){

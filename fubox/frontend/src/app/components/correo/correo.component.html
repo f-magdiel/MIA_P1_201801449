@@ -1,0 +1,17 @@
+<div>
+    <mat-card>
+        <mat-card-content>
+            <mat-list>
+                <mat-selection-list>
+                    <mat-list-item *ngFor="let data of this.arrayMail">
+                        <mat-icon >contact_mail</mat-icon>
+                        <div mat-line>Correo</div>
+                        <div mat-line>Mensaje: {{data.mensaje}}</div>
+                        <div mat-line>03/07/2022</div>
+                        
+                    </mat-list-item>
+                </mat-selection-list>
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+</div>

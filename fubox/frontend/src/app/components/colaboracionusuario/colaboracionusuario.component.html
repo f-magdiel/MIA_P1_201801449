@@ -1,1 +1,24 @@
-<p>colaboracionusuario works!</p>
+<div>
+    <mat-card>
+        <mat-card-content>
+            <mat-list>
+                <mat-selection-list>
+                    <mat-list-item *ngFor="let dat of this.arrayCarpetasColab">
+                        <mat-icon mat-list-icon *ngIf="dat.tipo=='1'">folder</mat-icon>
+                        <mat-icon mat-list-icon *ngIf="dat.tipo=='0'">assignment</mat-icon>
+                        <div mat-line >{{dat.nombre}}</div>
+                        <div mat-line> 03/07/2022 </div>
+                        <div mat-line>Propietario: {{dat.propietario}}</div>
+                    </mat-list-item>
+                </mat-selection-list>
+            </mat-list>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="warn" (click)="finalizarColaboracion()">Terminar</button>
+            <mat-form-field appearance="fill" class="registro">
+                <mat-label>Nombre carpeta o archivo</mat-label>
+                <input matInput required  [(ngModel)]="fincolab.carpeta">
+              </mat-form-field>
+        </mat-card-actions>
+    </mat-card>
+</div>

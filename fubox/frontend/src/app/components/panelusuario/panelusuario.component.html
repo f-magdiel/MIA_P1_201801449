@@ -3,12 +3,12 @@
     <div class="espacio"></div>
     <a mat-raised-button color="warn" (click)="showSistema()">Mi sistema de archivos</a>
     <div class="espaciobtn"></div>
-    <a mat-raised-button color="warn">Colaborador</a>
+    <a mat-raised-button color="warn" (click)="showColaborador()">Colaborador</a>
     <div class="espaciobtn"></div>
-    <a mat-raised-button color="warn">Correo</a>
+    <a mat-raised-button color="warn" (click)="showCorreo()">Correo</a>
     <div class="espaciobtn"></div>
     <a mat-raised-button color="warn" routerLink="">Salir</a>
 </mat-toolbar>
 <app-sistemausuario [dataEntrante]="this.nameusuario" *ngIf="visibleSistema" ></app-sistemausuario>
-<app-colaboracionusuario *ngIf="visibleColaborador"></app-colaboracionusuario>
-
+<app-colaboracionusuario [dataEntrante]="this.nameusuario" *ngIf="visibleColaborador"></app-colaboracionusuario>
+<app-correo [dataEntrante]="this.nameusuario" *ngIf="visibleCorreo" ></app-correo>
